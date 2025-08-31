@@ -2,13 +2,13 @@
 
 ## Tasks
 
-- [ ] 1. Set up Entity Framework Core and PostgreSQL dependencies
-  - [ ] 1.1 Write tests for database connection and context initialization
-  - [ ] 1.2 Install required NuGet packages (Npgsql.EntityFrameworkCore.PostgreSQL, EFCore.NamingConventions)
-  - [ ] 1.3 Configure connection string in appsettings.json for development environment
-  - [ ] 1.4 Create ApplicationDbContext inheriting from IdentityDbContext
-  - [ ] 1.5 Configure DbContext options and PostgreSQL provider in Program.cs
-  - [ ] 1.6 Verify all tests pass
+- [x] 1. Set up Entity Framework Core and PostgreSQL dependencies
+  - [x] 1.1 Write tests for database connection and context initialization
+  - [x] 1.2 Install required NuGet packages (Npgsql.EntityFrameworkCore.PostgreSQL, EFCore.NamingConventions)
+  - [x] 1.3 Configure connection string in appsettings.json for development environment
+  - [x] 1.4 Create ApplicationDbContext inheriting from IdentityDbContext
+  - [x] 1.5 Configure DbContext options and PostgreSQL provider in Program.cs
+  - [x] 1.6 Verify all tests pass
 
 - [ ] 2. Implement core domain entities and configurations
   - [ ] 2.1 Write tests for Client entity CRUD operations
