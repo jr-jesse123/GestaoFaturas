@@ -8,7 +8,7 @@ This document favors AI‑first product development: fast iteration on LLM featu
 
 ## Development Environment
 
-- Dev containers for reproducible development environments. keept it updated with all necessary tools, and always add claude code to the development environment.
+- Dev containers for reproducible development environments. keep it updated with all necessary tools, and always include Claude Code in the development environment.
 - .NET Aspire for local orchestration of dependencies/services.
 - Build tool: `dotnet` CLI.
 
@@ -17,17 +17,19 @@ This document favors AI‑first product development: fast iteration on LLM featu
 - Primary platform: .NET (latest).
 - Core domain language: F# (latest).
 - Infrastructure/presentation language: C# (latest).
-- Architectural style: Event‑driven Modular Monolith (evolve to services only when necessary).
+- Architectural style: 
+    - Event‑driven Modular Monolith 
+    - EventSourcing state management with regular sql tables projections
+
 - Contracts via messages/events; versioned message schemas.
 
 ## Web and APIs
 
 - Framework: ASP.NET Core (latest).
 - Minimal APIs for simple services; Controllers for complex domains.
-- OpenAPI (Swagger) with Scalar UI.
+- OpenAPI with Scalar UI.
 - API versioning (URL or header) using `Microsoft.AspNetCore.Mvc.Versioning`.
 - Conventions for pagination, filtering, and validation.
-- Rate limiting with `AspNetCore.RateLimiter` and appropriate CORS per environment.
 
 ## Frontend
 
@@ -44,53 +46,35 @@ This document favors AI‑first product development: fast iteration on LLM featu
 ## Data and Persistence
 
 - Primary database: PostgreSQL (latest).
-- Specialized EventStore when needed: EventStoreDB
 - ORM: Entity Framework Core.
-- Persistence strategy:
-    - Prefer JSONB for aggregate/record storage unless strong relations or ACID characteristics are required.
-    - Use normalized relational tables as needed.
 - Migrations via EF Core; naming/versioning conventions.
-- Caching: Redis (distributed cache) and in‑process MemoryCache where appropriate.
-- Optional vector search: pgvector or Azure AI Search for RAG scenarios.
-- Backups and retention policies defined per environment.
+- Optional vector search: pgvector
 
-## Messaging and Async Processing
+## Messaging and Async Processing if necessary
 
-- Persisted messaging: RabbitMQ when necessary.
-- Background jobs/scheduling: Hangfire or Azure Functions (timer/queue triggers) where suitable.
+- Persisted messaging: RabbitMQ.
+- Background jobs/scheduling: TickerQ, with dashboard and EntityFramework.
 - Reliability patterns: idempotency keys, retries with backoff, dead‑letter queues, outbox/inbox.
 
 ## AI/LLM Capabilities
 
 - LLM integration: Semantic Kernel with organized plugins.
 - Prompts: extract complex prompts to YAML; version control and review.
-- Retrieval‑Augmented Generation (RAG): embeddings store (pgvector/Azure AI Search) and citation grounding.
-- Safety and compliance: content filtering, PII redaction, and prompt/response tracing.
-- Evaluation: offline prompt tests, golden datasets, quality metrics; A/B and canary experiments for model/prompt changes.
-- Telemetry: token usage, cost, latency; budgets and alerting.
-- Model management: versioning, capability tags, fallback/rollback strategy; feature flags to switch models.
-- Caching: semantic/response caching to reduce cost and latency where safe.
+- Retrieval‑Augmented Generation (RAG): embeddings store (pgvector) and semnatik kernel.
+- Model: Gpt-5
 
 ## Security and Compliance
 
-- Authentication/Authorization: Keycloack OAuth2/OIDC 
+- Authentication/Authorization: OIDC Keycloak 
 - Secrets management:
     - Local: .NET User Secrets and configuration files.
     - Cloud: Azure Key Vault; environment variables in containers.
-- Data protection: externalize ASP.NET Core data protection keys.
-- OWASP Top 10 mitigations; input validation; HTTPS/TLS everywhere.
-- API protections: rate limiting, request size limits, and strict CORS.
-- Privacy/LGPD/GDPR: data minimization, consent tracking, retention and deletion workflows, audit trails.
-- Supply chain security: SBOM generation and package allowlists.
 
 ## Testing Strategy
 
 - Unit tests: xUnit (every public method where meaningful); bUnit for Blazor components.
 - Integration tests: `Microsoft.AspNetCore.Mvc.Testing` with Testcontainers for dependencies.
 - E2E tests: Playwright when necessary.
-- Contract tests for APIs (e.g., Pact) where multi‑service interactions exist.
-- AI evaluation tests: regression harness for prompts, datasets, and metrics.
-- Coverage thresholds and flaky test handling in CI.
 
 ## Documentation
 
@@ -103,9 +87,7 @@ This document favors AI‑first product development: fast iteration on LLM featu
 - Platform: Azure Pipelines.
 - Triggers: push to `main` (production) and `staging` (staging) branches.
 - Pipelines: build, test (unit/integration/E2E), security scans (SAST/DAST), SBOM, and artifact publish.
-- Deployments: Azure with Terraform IaC.
-- Strategies: blue/green or canary when supported; health checks and automated rollback on failure.
-- Tests must pass before deployment.
+- IAC: Terraform
 
 ## Release Management
 
@@ -116,8 +98,6 @@ This document favors AI‑first product development: fast iteration on LLM featu
 ## Resilience and Performance
 
 - Health checks endpoints for all services.
-- Resilience policies with Polly (retries, circuit breakers, bulkheads, timeouts).
-- Load/performance testing (e.g., k6) on critical paths.
 
 ## Email Integrations
 
