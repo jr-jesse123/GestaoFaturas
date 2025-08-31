@@ -1,0 +1,123 @@
+{
+  "name": "GestaoFaturas - Invoice Management",
+  "dockerFile": "Dockerfile",
+  // Features to add to the dev container
+  "features": {
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/azure-cli:1": {}
+  },
+  // Configure tool-specific properties
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "dotnet.defaultSolution": "GestaoFaturas.sln",
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": false,
+        "editor.minimap.enabled": false,
+        "editor.rulers": [
+          120
+        ],
+        "files.trimTrailingWhitespace": true,
+        "files.insertFinalNewline": true,
+        "files.trimFinalNewlines": true,
+        "omnisharp.enableRoslynAnalyzers": true,
+        "omnisharp.enableEditorConfigSupport": true,
+        "[csharp]": {
+          "editor.defaultFormatter": "ms-dotnettools.csharp"
+        },
+        "[json]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        },
+        "[jsonc]": {
+          "editor.defaultFormatter": "vscode.json-language-features"
+        }
+      },
+      "extensions": [
+        // C# and .NET
+        "ms-dotnettools.csdevkit",
+        "ms-dotnettools.csharp",
+        "ms-dotnettools.vscode-dotnet-runtime",
+        "ms-dotnettools.dotnet-maui",
+        "adrianwilczynski.asp-net-core-switcher",
+        "jongrant.csharpsortusings",
+        "kreativ-software.csharpextensions",
+        // Database
+        "ckolkman.vscode-postgres",
+        "mtxr.sqltools",
+        "mtxr.sqltools-driver-pg",
+        // Development tools
+        "EditorConfig.EditorConfig",
+        "eamodio.gitlens",
+        "mhutchie.git-graph",
+        "donjayamanne.githistory",
+        "GitHub.copilot",
+        "GitHub.copilot-chat",
+        "ms-azuretools.vscode-docker",
+        "humao.rest-client",
+        "42Crunch.vscode-openapi",
+        // Code quality
+        "SonarSource.sonarlint-vscode",
+        "streetsidesoftware.code-spell-checker",
+        "DavidAnson.vscode-markdownlint",
+        // Productivity
+        "alefragnani.Bookmarks",
+        "Gruntfuggly.todo-tree",
+        "wayou.vscode-todo-highlight",
+        "christian-kohler.path-intellisense",
+        "formulahendry.auto-rename-tag",
+        "aaron-bond.better-comments",
+        "Anthropic.claude-code"
+      ]
+    }
+  },
+  // Port forwarding
+  "forwardPorts": [
+    5000, // HTTP
+    5001, // HTTPS
+    5432, // PostgreSQL (when running via Aspire)
+    15000, // Aspire Dashboard
+    14333 // Aspire OTLP
+  ],
+  "portsAttributes": {
+    "5000": {
+      "label": "Application (HTTP)",
+      "onAutoForward": "notify"
+    },
+    "5001": {
+      "label": "Application (HTTPS)",
+      "onAutoForward": "notify"
+    },
+    "5432": {
+      "label": "PostgreSQL",
+      "onAutoForward": "silent"
+    },
+    "15000": {
+      "label": "Aspire Dashboard",
+      "onAutoForward": "notify"
+    }
+  },
+  // Run commands after container is created
+  "postCreateCommand": "/bin/bash .devcontainer/post-create.sh",
+  // Run as non-root user
+  "remoteUser": "vscode",
+  // Environment variables
+  "containerEnv": {
+    "ASPNETCORE_ENVIRONMENT": "Development",
+    "DOTNET_CLI_TELEMETRY_OPTOUT": "1",
+    "DOTNET_NOLOGO": "true",
+    "DOTNET_USE_POLLING_FILE_WATCHER": "true",
+    "NUGET_XMLDOC_MODE": "skip"
+  },
+  // Mount points
+  "mounts": [
+    "source=${localWorkspaceFolderBasename}-nuget,target=/home/vscode/.nuget,type=volume"
+  ],
+  // Container capabilities
+  "capAdd": [
+    "SYS_PTRACE"
+  ],
+  "securityOpt": [
+    "seccomp=unconfined"
+  ]
+}
