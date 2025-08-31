@@ -15,13 +15,8 @@ This document favors AI‑first product development: fast iteration on LLM featu
 ## Platforms, Languages, and Architecture
 
 - Primary platform: .NET (latest).
-- Core domain language: F# (latest).
+- Core domain language: C# (latest).
 - Infrastructure/presentation language: C# (latest).
-- Architectural style: 
-    - Event‑driven Modular Monolith 
-    - EventSourcing state management with regular sql tables projections
-
-- Contracts via messages/events; versioned message schemas.
 
 ## Web and APIs
 

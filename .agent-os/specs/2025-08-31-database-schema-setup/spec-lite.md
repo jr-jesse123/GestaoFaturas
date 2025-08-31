@@ -1,0 +1,3 @@
+# Spec Summary (Lite)
+
+Design and implement a PostgreSQL database schema with Entity Framework Core for telecom invoice management, supporting multi-tenant cost centers, invoice tracking, and automated workflows. The schema establishes core entities (Clients, Cost Centers, Invoices, Responsible Persons) with proper relationships, indexes, and constraints to ensure data integrity and performance at scale.
