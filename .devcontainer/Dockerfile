@@ -53,7 +53,9 @@ USER vscode
 # Configure git for the vscode user
 RUN git config --global core.autocrlf false \
     && git config --global core.eol lf \
-    && git config --global init.defaultBranch main
+    && git config --global init.defaultBranch main \
+    && git config --global user.email "jesse.junior@gmail.com" \
+    && git config --global user.name "Jessé Junior"
 
 # Switch back to dialog for interactive use
 ENV DEBIAN_FRONTEND=dialog
