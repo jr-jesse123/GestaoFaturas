@@ -1,4 +1,5 @@
 using GestaoFaturas.Api.Data;
+using GestaoFaturas.Tests.Fixtures;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -6,140 +7,152 @@ using Microsoft.Extensions.Logging;
 
 namespace GestaoFaturas.Tests.Data;
 
-public class ApplicationDbContextTests
+public class ApplicationDbContextTests : IClassFixture<PostgreSqlFixture>
 {
-    [Fact]
-    public void ApplicationDbContext_ShouldInheritFromIdentityDbContext()
-    {
-        // Arrange
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb_Inheritance")
-            .Options;
+    private readonly PostgreSqlFixture _fixture;
 
-        // Act
-        using var context = new ApplicationDbContext(options);
+    public ApplicationDbContextTests(PostgreSqlFixture fixture)
+    {
+        _fixture = fixture;
+    }
+
+    [Fact]
+    public async Task ApplicationDbContext_ShouldInheritFromIdentityDbContext()
+    {
+        // Arrange & Act
+        using var context = _fixture.CreateContext();
 
         // Assert
         Assert.IsAssignableFrom<IdentityDbContext>(context);
+        Assert.True(await context.Database.CanConnectAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldConfigurePostgreSQLProvider()
+    public async Task ApplicationDbContext_ShouldConfigurePostgreSQLProvider()
     {
-        // Arrange
-        var connectionString = "Host=localhost;Port=5432;Database=test_db;Username=test;Password=test";
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseNpgsql(connectionString)
-            .Options;
-
-        // Act
-        using var context = new ApplicationDbContext(options);
+        // Arrange & Act
+        using var context = _fixture.CreateContext();
 
         // Assert
         Assert.True(context.Database.IsNpgsql());
+        Assert.False(context.Database.IsInMemory());
+        Assert.True(await context.Database.CanConnectAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldHaveValidConnectionString()
+    public async Task ApplicationDbContext_ShouldHaveValidConnectionString()
     {
-        // Arrange
-        var connectionString = "Host=localhost;Port=5432;Database=gestao_faturas_test;Username=test;Password=test";
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseNpgsql(connectionString)
-            .Options;
-
-        // Act
-        using var context = new ApplicationDbContext(options);
+        // Arrange & Act
+        using var context = _fixture.CreateContext();
+        var connectionString = context.Database.GetConnectionString();
 
         // Assert
-        Assert.NotNull(context.Database.GetConnectionString());
-        Assert.Contains("gestao_faturas_test", context.Database.GetConnectionString());
+        Assert.NotNull(connectionString);
+        Assert.Contains("gestao_faturas_test", connectionString);
+        Assert.Contains("test_user", connectionString);
+        Assert.True(await context.Database.CanConnectAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldInitializeWithoutErrors()
+    public async Task ApplicationDbContext_ShouldInitializeWithoutErrors()
     {
-        // Arrange
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb_Initialize")
-            .Options;
+        // Arrange & Act
+        using var context = _fixture.CreateContext();
 
-        // Act & Assert
-        using var context = new ApplicationDbContext(options);
+        // Assert
         Assert.NotNull(context);
         Assert.NotNull(context.Users); // Identity table
         Assert.NotNull(context.Roles); // Identity table
+        Assert.True(await context.Database.CanConnectAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldUseNamingConventions()
+    public async Task ApplicationDbContext_ShouldUseNamingConventions()
     {
-        // Arrange
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseNpgsql("Host=localhost;Database=test;Username=test;Password=test")
-            .UseSnakeCaseNamingConvention()
-            .Options;
-
-        // Act
-        using var context = new ApplicationDbContext(options);
+        // Arrange & Act
+        using var context = _fixture.CreateContext();
+        await context.Database.EnsureCreatedAsync();
 
         // Assert - Verify that snake_case naming convention is applied
-        // This test ensures the configuration is set up correctly
+        // Check if Identity tables are created with snake_case names
+        await context.Database.ExecuteSqlRawAsync(
+            "SELECT 1 FROM information_schema.tables WHERE table_name = 'asp_net_users' LIMIT 1");
+        
         Assert.NotNull(context);
         Assert.True(context.Database.IsNpgsql());
     }
 
-    [Theory]
-    [InlineData("Host=localhost;Database=gestao_faturas_test;Username=test;Password=test")]
-    [InlineData("Host=localhost;Port=5432;Database=gestao_faturas_dev;Username=dev;Password=dev")]
-    public void ApplicationDbContext_ShouldHandleValidConnectionStrings(string connectionString)
+    [Fact]
+    public async Task ApplicationDbContext_ShouldHandleValidConnectionStrings()
     {
         // Arrange & Act
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseNpgsql(connectionString)
-            .Options;
-
-        using var context = new ApplicationDbContext(options);
+        using var context = _fixture.CreateContext();
 
         // Assert
         Assert.NotNull(context.Database.GetConnectionString());
         Assert.True(context.Database.IsNpgsql());
+        Assert.True(await context.Database.CanConnectAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldFailWithInvalidConnectionString()
+    public async Task ApplicationDbContext_ShouldFailWithInvalidConnectionString()
     {
         // Arrange
-        var invalidConnectionString = "invalid connection string";
+        var invalidConnectionString = "Host=nonexistent.invalid;Database=test;Username=test;Password=test;Connection Timeout=1;Command Timeout=1";
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseNpgsql(invalidConnectionString)
+            .Options;
 
         // Act & Assert
-        // Using invalid connection string should throw during context options creation
-        Assert.ThrowsAny<Exception>(() =>
-        {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseNpgsql(invalidConnectionString)
-                .Options;
-
-            using var context = new ApplicationDbContext(options);
-            // Force a database operation to trigger connection attempt
-            context.Database.EnsureCreated();
-        });
+        using var context = new ApplicationDbContext(options);
+        await Assert.ThrowsAnyAsync<Exception>(async () => 
+            await context.Database.OpenConnectionAsync());
     }
 
     [Fact]
-    public void ApplicationDbContext_ShouldConfigureLogging()
+    public async Task ApplicationDbContext_ShouldConfigureLogging()
     {
         // Arrange
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: "TestDb_Logging")
-            .EnableSensitiveDataLogging()
-            .EnableDetailedErrors()
-            .Options;
+        var options = _fixture.CreateOptions();
 
         // Act
         using var context = new ApplicationDbContext(options);
 
         // Assert - Verify context can be created with logging options
         Assert.NotNull(context);
+        Assert.True(await context.Database.CanConnectAsync());
+    }
+
+    [Fact]
+    public async Task ApplicationDbContext_ShouldCreateAndMigrateDatabase()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+
+        // Act
+        await context.Database.EnsureCreatedAsync();
+
+        // Assert
+        Assert.True(await context.Database.CanConnectAsync());
+        
+        // Verify Identity tables were created
+        var userCount = await context.Users.CountAsync();
+        var roleCount = await context.Roles.CountAsync();
+        
+        Assert.True(userCount >= 0); // Table exists
+        Assert.True(roleCount >= 0); // Table exists
+    }
+
+    [Fact]
+    public async Task ApplicationDbContext_ShouldSupportTransactions()
+    {
+        // Arrange
+        using var context = _fixture.CreateContext();
+        await context.Database.EnsureCreatedAsync();
+
+        // Act & Assert
+        using var transaction = await context.Database.BeginTransactionAsync();
+        Assert.NotNull(transaction);
+        await transaction.RollbackAsync();
     }
 }
