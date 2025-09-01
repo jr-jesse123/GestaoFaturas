@@ -44,6 +44,18 @@ public class PostgreSqlFixture : IAsyncLifetime
         return context;
     }
 
+    public ApplicationDbContext CreateMigrationContext()
+    {
+        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+            .UseNpgsql(ConnectionString)
+            .UseSnakeCaseNamingConvention()
+            .Options;
+
+        var context = new ApplicationDbContext(options);
+        // Don't call EnsureCreated for migration tests - let migration handle it
+        return context;
+    }
+
     public DbContextOptions<ApplicationDbContext> CreateOptions()
     {
         return new DbContextOptionsBuilder<ApplicationDbContext>()
