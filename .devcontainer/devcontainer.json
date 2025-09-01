@@ -83,7 +83,6 @@
     5000, // HTTP
     5001, // HTTPS
     5432, // PostgreSQL (when running via Aspire)
-    5433, // PostgreSQL (TestContainers)
     15000, // Aspire Dashboard
     14333 // Aspire OTLP
   ],
@@ -98,10 +97,6 @@
     },
     "5432": {
       "label": "PostgreSQL",
-      "onAutoForward": "silent"
-    },
-    "5433": {
-      "label": "PostgreSQL (TestContainers)",
       "onAutoForward": "silent"
     },
     "15000": {
