@@ -20,22 +20,22 @@
   - [x] 2.7 Implement IEntityTypeConfiguration for each entity with Fluent API
   - [x] 2.8 Verify all tests pass
 
-- [ ] 3. Configure database constraints and indexes
-  - [ ] 3.1 Write tests for unique constraints and check constraints
-  - [ ] 3.2 Configure unique constraints (Client.TaxId, CostCenter.Code, Client+InvoiceNumber)
-  - [ ] 3.3 Add check constraints for business rules (amount > 0, date validations)
-  - [ ] 3.4 Create composite and covering indexes for query optimization
-  - [ ] 3.5 Configure cascade delete rules and referential integrity
-  - [ ] 3.6 Verify all tests pass
+- [x] 3. Configure database constraints and indexes
+  - [x] 3.1 Write tests for unique constraints and check constraints
+  - [x] 3.2 Configure unique constraints (Client.TaxId, CostCenter.Code, Client+InvoiceNumber)
+  - [x] 3.3 Add check constraints for business rules (amount > 0, date validations)
+  - [x] 3.4 Create composite and covering indexes for query optimization
+  - [x] 3.5 Configure cascade delete rules and referential integrity
+  - [x] 3.6 Verify all tests pass
 
-- [ ] 4. Create and execute initial database migration
-  - [ ] 4.1 Write integration tests using TestContainers for PostgreSQL
-  - [ ] 4.2 Generate initial migration using EF Core tools
-  - [ ] 4.3 Review generated migration for correctness
-  - [ ] 4.4 Add seed data for InvoiceStatus and SystemSetting tables
-  - [ ] 4.5 Test migration execution in local PostgreSQL instance
-  - [ ] 4.6 Verify database schema matches specification
-  - [ ] 4.7 Verify all integration tests pass
+- [x] 4. Create and execute initial database migration
+  - [x] 4.1 Write integration tests using TestContainers for PostgreSQL
+  - [x] 4.2 Generate initial migration using EF Core tools
+  - [x] 4.3 Review generated migration for correctness
+  - [x] 4.4 Add seed data for InvoiceStatus tables
+  - [x] 4.5 Test migration execution in local PostgreSQL instance
+  - [x] 4.6 Verify database schema matches specification
+  - [x] 4.7 Verify all integration tests pass
 
 - [ ] 5. Implement repository pattern and data access layer
   - [ ] 5.1 Write tests for generic repository operations
