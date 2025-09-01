@@ -7,7 +7,7 @@
 
 ### Features
 
-- [ ] Database schema design and setup - PostgreSQL with Entity Framework Core `M`
+- [x] Database schema design and setup - PostgreSQL with Entity Framework Core `M`
 - [ ] Client management CRUD operations - Add, edit, delete, list clients `M`
 - [ ] Client Responsible Person CRUD operations - Add, edit, delete, list Responsible persons `M`
 - [ ] Cost Center management - Create and manage cost centers `S`
