@@ -5,7 +5,13 @@
       "Bash(devcontainer build:*)",
       "Bash(devcontainer exec:*)",
       "Bash(devcontainer up:*)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(dotnet test:*)",
+      "Bash(docker:*)",
+      "Bash(lsof:*)",
+      "Bash(netstat:*)"
     ],
     "deny": [],
     "ask": []

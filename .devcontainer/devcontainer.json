@@ -4,7 +4,12 @@
   // Features to add to the dev container
   "features": {
     "ghcr.io/devcontainers/features/github-cli:1": {},
-    "ghcr.io/devcontainers/features/azure-cli:1": {}
+    "ghcr.io/devcontainers/features/azure-cli:1": {},
+    "ghcr.io/devcontainers/features/docker-in-docker:2": {
+      "version": "latest",
+      "enableNonRootDocker": true,
+      "moby": true
+    }
   },
   // Configure tool-specific properties
   "customizations": {
@@ -67,7 +72,9 @@
         "christian-kohler.path-intellisense",
         "formulahendry.auto-rename-tag",
         "aaron-bond.better-comments",
-        "Anthropic.claude-code"
+        "Anthropic.claude-code",
+        "formulahendry.dotnet-test-explorer",
+        "fernandoescolar.vscode-solution-explorer"
       ]
     }
   },
