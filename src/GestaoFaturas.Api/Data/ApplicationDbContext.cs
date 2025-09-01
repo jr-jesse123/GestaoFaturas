@@ -4,6 +4,7 @@ using GestaoFaturas.Api.Models;
 using GestaoFaturas.Api.Data.Configurations;
 using System.Reflection;
 
+
 namespace GestaoFaturas.Api.Data;
 
 public class ApplicationDbContext : IdentityDbContext
@@ -12,6 +13,7 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
+
 
     // DbSets for domain entities
     public DbSet<Client> Clients { get; set; }
@@ -93,5 +95,6 @@ public class ApplicationDbContext : IdentityDbContext
                 entity.Property("UpdatedAt").CurrentValue = now;
             }
         }
+
     }
 }
