@@ -4,10 +4,6 @@ using GestaoFaturas.Api.Models;
 using GestaoFaturas.Api.Data.Configurations;
 using System.Reflection;
 
-using GestaoFaturas.Api.Models;
-using GestaoFaturas.Api.Data.Configurations;
-using System.Reflection;
-
 
 namespace GestaoFaturas.Api.Data;
 
@@ -17,15 +13,6 @@ public class ApplicationDbContext : IdentityDbContext
         : base(options)
     {
     }
-
-
-    // DbSets for domain entities
-    public DbSet<Client> Clients { get; set; }
-    public DbSet<CostCenter> CostCenters { get; set; }
-    public DbSet<ResponsiblePerson> ResponsiblePersons { get; set; }
-    public DbSet<Invoice> Invoices { get; set; }
-    public DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
-    public DbSet<InvoiceHistory> InvoiceHistories { get; set; }
 
 
     // DbSets for domain entities
@@ -114,6 +101,5 @@ public class ApplicationDbContext : IdentityDbContext
                 updatedAtProperty.CurrentValue = now;
             }
         }
-
     }
 }
