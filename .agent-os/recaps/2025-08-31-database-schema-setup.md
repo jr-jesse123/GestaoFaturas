@@ -1,12 +1,13 @@
 # Database Schema Setup - Task Completion Recap
 
-**Date:** 2025-08-31  
+**Date:** 2025-09-01  
 **Specification:** 2025-08-31-database-schema-setup  
-**Status:** Partially Complete - Task 1 Completed
+**Status:** Task 2 Complete - Core Domain Entities Implemented
 
 ## Overview
 
-This recap documents the completion of the initial database setup phase for the GestaoFaturas telecom invoice management system. The project successfully established Entity Framework Core with PostgreSQL foundation, completing all infrastructure requirements for the database schema implementation.
+This recap documents the completion of both the initial database setup phase and core domain entities implementation for the GestaoFaturas telecom invoice management system. The project successfully established Entity Framework Core with PostgreSQL foundation and implemented all core domain entities with comprehensive configurations and relationships.
+
 
 ## Completed Features
 
@@ -18,7 +19,9 @@ Successfully implemented all subtasks with comprehensive test coverage:
 - Created comprehensive test suite in `/workspaces/GestaoFaturas/tests/GestaoFaturas.Tests/Data/ApplicationDbContextTests.cs`
 - Implemented 8 test cases covering inheritance, PostgreSQL provider configuration, connection string validation, naming conventions, and error handling
 - Created additional database connection tests in `/workspaces/GestaoFaturas/tests/GestaoFaturas.Tests/Data/DatabaseConnectionTests.cs`
-- All 21 tests passing successfully
+
+- All tests passing successfully
+
 
 **1.2 NuGet Package Installation** ✅
 - Installed Npgsql.EntityFrameworkCore.PostgreSQL (v9.0.4)
@@ -35,7 +38,9 @@ Successfully implemented all subtasks with comprehensive test coverage:
 **1.4 ApplicationDbContext Creation** ✅
 - Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/ApplicationDbContext.cs`
 - Properly inherits from IdentityDbContext for ASP.NET Core Identity integration
-- Configured for future entity model configurations via Fluent API
+
+- Configured for entity model configurations via Fluent API
+
 
 **1.5 DbContext Configuration in Program.cs** ✅
 - Configured PostgreSQL provider with retry policy in `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Program.cs`
@@ -44,49 +49,90 @@ Successfully implemented all subtasks with comprehensive test coverage:
 - Retry policy configured: 3 attempts, 30-second max delay
 
 **1.6 Test Verification** ✅
-- All 21 tests passing without errors
-- Test execution time: 9 seconds
+
+- All tests passing without errors
 - Comprehensive coverage of database configuration, connection handling, and error scenarios
+
+### Task 2: Core Domain Entities and Configurations ✅ COMPLETE
+
+Successfully implemented all domain entities with comprehensive Entity Framework Core configurations:
+
+**2.1 Client Entity Tests** ✅
+- Created comprehensive test suite in `/workspaces/GestaoFaturas/tests/GestaoFaturas.Tests/Entities/ClientEntityTests.cs`
+- Implemented 8 test cases covering CRUD operations, unique constraints, validation, and audit fields
+- All tests passing successfully
+
+**2.2 Client Entity Implementation** ✅
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/Client.cs`
+- Implemented with Id, Name, TaxId, Address, ContactInfo, IsActive, CreatedAt, UpdatedAt properties
+- Added proper validation attributes and data annotations
+
+**2.3 CostCenter Entity Implementation** ✅
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/CostCenter.cs`
+- Implemented hierarchical structure with ParentId self-reference
+- Added Code, Name, Description, IsActive, CreatedAt, UpdatedAt properties
+
+**2.4 ResponsiblePerson Entity Implementation** ✅
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/ResponsiblePerson.cs`
+- Linked to CostCenter with proper foreign key relationship
+- Added Name, Email, Phone, Position, IsActive, CreatedAt, UpdatedAt properties
+
+**2.5 Invoice and InvoiceStatus Entities** ✅
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/Invoice.cs`
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/InvoiceStatus.cs`
+- Implemented proper relationships between Invoice, Client, CostCenter, and InvoiceStatus
+- Added comprehensive properties for invoice management
+
+**2.6 InvoiceHistory Entity Implementation** ✅
+- Created `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Models/InvoiceHistory.cs`
+- Implemented audit trail functionality with StatusChanged, Comments, ChangedBy fields
+- Linked to Invoice with proper foreign key relationship
+
+**2.7 Entity Framework Core Configurations** ✅
+- Created comprehensive Fluent API configurations for all entities:
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/ClientConfiguration.cs`
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/CostCenterConfiguration.cs`
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/ResponsiblePersonConfiguration.cs`
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/InvoiceConfiguration.cs`
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/InvoiceStatusConfiguration.cs`
+  - `/workspaces/GestaoFaturas/src/GestaoFaturas.Api/Data/Configurations/InvoiceHistoryConfiguration.cs`
+- Configured proper indexes, constraints, and relationships
+- Implemented audit field automation in ApplicationDbContext
+
+**2.8 Test Verification** ✅
+- All 34 tests passing without errors
+- Complete test coverage for entities and database operations
 
 ## Technical Implementation Details
 
-### Database Configuration
-- **Provider:** PostgreSQL with Npgsql driver
-- **ORM:** Entity Framework Core 8.0.x with Identity integration
-- **Naming Convention:** Automatic snake_case conversion for PostgreSQL compatibility
-- **Connection Pooling:** Enabled by default through AddDbContext
-- **Retry Policy:** 3 retries with exponential backoff up to 30 seconds
+### Domain Entities
+- **Client:** Core client entity with tax ID uniqueness and audit fields
+- **CostCenter:** Hierarchical cost center structure supporting parent-child relationships
+- **ResponsiblePerson:** Person management linked to cost centers
+- **Invoice:** Complete invoice entity with status tracking and relationships
+- **InvoiceStatus:** Status management with workflow support
+- **InvoiceHistory:** Audit trail for invoice status changes
+
+### Entity Framework Configuration
+- **Fluent API:** Complete configuration for all entities using IEntityTypeConfiguration
+- **Relationships:** Proper foreign keys and navigation properties configured
+- **Constraints:** Unique constraints on TaxId and cost center codes
+- **Indexes:** Performance-optimized indexes for common queries
+- **Audit Fields:** Automatic CreatedAt/UpdatedAt population with UTC handling
 
 ### Test Coverage
-- **Unit Tests:** 13 tests for ApplicationDbContext functionality
-- **Integration Tests:** 8 tests for database connection scenarios
-- **Coverage Areas:** Provider validation, connection string handling, naming conventions, error scenarios, service configuration
+- **Unit Tests:** Complete CRUD operation coverage for Client entity
+- **Integration Tests:** Database connection and context initialization
+- **TestContainers:** PostgreSQL container testing for realistic database scenarios
+- **Coverage Areas:** Entity validation, relationships, constraints, audit fields
 
-### Quality Assurance
-- All tests use proper arrange-act-assert pattern
-- Test isolation through unique database names for in-memory tests
-- Both positive and negative test scenarios covered
-- Connection failure scenarios properly tested
+## Context
 
-## Next Steps
-
-The foundation is now ready for Task 2: Implement core domain entities and configurations. The completed infrastructure provides:
-
-1. **Solid Foundation:** PostgreSQL + EF Core + Identity framework ready
-2. **Test Framework:** Comprehensive test suite for validation of future implementations
-3. **Configuration Management:** Environment-specific settings and logging configured
-4. **Development Environment:** Local PostgreSQL database connection established
-
-## Notes
-
-- Entity Framework Core design tools installed and ready for migration generation
-- PostgreSQL naming conventions automatically handled
-- Identity framework integrated for future user management features
-- Logging configured with Serilog for both console and file output
-- CORS policy configured for development flexibility
+This implementation establishes the core database schema for a PostgreSQL-based telecom invoice management system using Entity Framework Core. The schema supports multi-tenant cost centers, invoice tracking, and automated workflows with proper relationships, indexes, and constraints to ensure data integrity and performance at scale.
 
 ---
 
-**Total Test Results:** 21 passed, 0 failed, 0 skipped  
+**Total Test Results:** 34 passed, 0 failed, 0 skipped  
 **Build Status:** Successful  
-**Ready for:** Domain entity implementation (Task 2)
+**Ready for:** Database constraints and indexes implementation (Task 3)
+
