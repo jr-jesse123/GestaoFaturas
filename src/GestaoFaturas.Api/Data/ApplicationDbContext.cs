@@ -4,6 +4,10 @@ using GestaoFaturas.Api.Models;
 using GestaoFaturas.Api.Data.Configurations;
 using System.Reflection;
 
+using GestaoFaturas.Api.Models;
+using GestaoFaturas.Api.Data.Configurations;
+using System.Reflection;
+
 
 namespace GestaoFaturas.Api.Data;
 
@@ -23,13 +27,22 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
     public DbSet<InvoiceHistory> InvoiceHistories { get; set; }
 
+
+    // DbSets for domain entities
+    public DbSet<Client> Clients { get; set; }
+    public DbSet<CostCenter> CostCenters { get; set; }
+    public DbSet<ResponsiblePerson> ResponsiblePersons { get; set; }
+    public DbSet<Invoice> Invoices { get; set; }
+    public DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
+    public DbSet<InvoiceHistory> InvoiceHistories { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
 
         // Configure PostgreSQL naming conventions using snake_case
         // This will be handled by the EFCore.NamingConventions package
-        
+
         // Apply all entity configurations
         modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
@@ -74,7 +87,7 @@ public class ApplicationDbContext : IdentityDbContext
     private void UpdateAuditFields()
     {
         var entities = ChangeTracker.Entries()
-            .Where(x => x.Entity is Client || x.Entity is CostCenter || x.Entity is ResponsiblePerson || 
+            .Where(x => x.Entity is Client || x.Entity is CostCenter || x.Entity is ResponsiblePerson ||
                        x.Entity is Invoice || x.Entity is InvoiceStatus || x.Entity is InvoiceHistory)
             .Where(x => x.State == EntityState.Added || x.State == EntityState.Modified);
 
@@ -88,7 +101,7 @@ public class ApplicationDbContext : IdentityDbContext
                 var createdAtProperty = entity.Properties.FirstOrDefault(p => p.Metadata.Name == "CreatedAt");
                 if (createdAtProperty != null)
                 {
-                    if (createdAtProperty.CurrentValue == null || 
+                    if (createdAtProperty.CurrentValue == null ||
                         (createdAtProperty.CurrentValue is DateTime createdAt && createdAt == DateTime.MinValue))
                         createdAtProperty.CurrentValue = now;
                 }
