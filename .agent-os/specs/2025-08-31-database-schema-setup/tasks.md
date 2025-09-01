@@ -10,15 +10,15 @@
   - [x] 1.5 Configure DbContext options and PostgreSQL provider in Program.cs
   - [x] 1.6 Verify all tests pass
 
-- [ ] 2. Implement core domain entities and configurations
-  - [ ] 2.1 Write tests for Client entity CRUD operations
-  - [ ] 2.2 Create Client entity with required properties and validation attributes
-  - [ ] 2.3 Create CostCenter entity with hierarchical structure support
-  - [ ] 2.4 Create ResponsiblePerson entity linked to CostCenter
-  - [ ] 2.5 Create Invoice and InvoiceStatus entities with relationships
-  - [ ] 2.6 Create InvoiceHistory entity for audit trail
-  - [ ] 2.7 Implement IEntityTypeConfiguration for each entity with Fluent API
-  - [ ] 2.8 Verify all tests pass
+- [x] 2. Implement core domain entities and configurations
+  - [x] 2.1 Write tests for Client entity CRUD operations
+  - [x] 2.2 Create Client entity with required properties and validation attributes
+  - [x] 2.3 Create CostCenter entity with hierarchical structure support
+  - [x] 2.4 Create ResponsiblePerson entity linked to CostCenter
+  - [x] 2.5 Create Invoice and InvoiceStatus entities with relationships
+  - [x] 2.6 Create InvoiceHistory entity for audit trail
+  - [x] 2.7 Implement IEntityTypeConfiguration for each entity with Fluent API
+  - [x] 2.8 Verify all tests pass
 
 - [ ] 3. Configure database constraints and indexes
   - [ ] 3.1 Write tests for unique constraints and check constraints
