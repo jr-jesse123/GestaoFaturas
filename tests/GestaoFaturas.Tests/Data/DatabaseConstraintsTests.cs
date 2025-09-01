@@ -31,10 +31,10 @@ public class DatabaseConstraintsTests : IClassFixture<PostgreSqlFixture>
         return context;
     }
 
-    private string GetUniqueTaxId() => (DateTime.UtcNow.Ticks % 100000000000000).ToString("D14"); // Max 14 chars
-    private string GetUniqueEmail() => $"test{DateTime.UtcNow.Ticks % 1000000:D6}@example.com"; // Max 100 chars from Client model
-    private string GetUniqueCode() => $"CC{DateTime.UtcNow.Ticks % 100000:D5}"; // Max 50 chars from CostCenter model
-    private string GetUniqueInvoiceNumber() => $"INV{DateTime.UtcNow.Ticks % 100000:D5}"; // Max 100 chars from Invoice model
+    private static string GetUniqueTaxId() => (DateTime.UtcNow.Ticks % 100000000000000).ToString("D14"); // Max 14 chars
+    private static string GetUniqueEmail() => $"test{DateTime.UtcNow.Ticks % 1000000:D6}@example.com"; // Max 100 chars from Client model
+    private static string GetUniqueCode() => $"CC{DateTime.UtcNow.Ticks % 100000:D5}"; // Max 50 chars from CostCenter model
+    private static string GetUniqueInvoiceNumber() => $"INV{DateTime.UtcNow.Ticks % 100000:D5}"; // Max 100 chars from Invoice model
 
     #region Unique Constraints Tests
 

@@ -37,10 +37,20 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
 
         foreach (var tableName in tableNames)
         {
-            var tableExists = await context.Database.ExecuteSqlRawAsync(
-                $"SELECT 1 FROM information_schema.tables WHERE table_name = '{tableName}' LIMIT 1"
-            ) >= 0;
-            Assert.True(tableExists, $"Table {tableName} should exist after migration");
+            var sql = "SELECT COUNT(*) FROM information_schema.tables WHERE table_name = @tableName";
+            using var command = context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = "@tableName";
+            parameter.Value = tableName;
+            command.Parameters.Add(parameter);
+            
+            await context.Database.OpenConnectionAsync();
+            var result = await command.ExecuteScalarAsync();
+            await context.Database.CloseConnectionAsync();
+            
+            var tableCount = Convert.ToInt32(result);
+            Assert.True(tableCount > 0, $"Table {tableName} should exist after migration");
         }
     }
 
@@ -52,7 +62,7 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
         await context.Database.EnsureDeletedAsync();
         await context.Database.MigrateAsync();
 
-        // Act & Assert - Check for key unique indexes
+        // Act & Assert - Check for key unique indexes (PostgreSQL converts names to lowercase)
         var uniqueIndexes = new[]
         {
             ("clients", "ix_clients_tax_id"),
@@ -63,11 +73,26 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
 
         foreach (var (tableName, indexName) in uniqueIndexes)
         {
-            var indexExists = await context.Database.ExecuteSqlRawAsync($@"
-                SELECT 1 FROM pg_indexes 
-                WHERE tablename = '{tableName}' AND indexname = '{indexName}' 
-                LIMIT 1") >= 0;
-            Assert.True(indexExists, $"Index {indexName} on table {tableName} should exist");
+            var sql = "SELECT COUNT(*) FROM pg_indexes WHERE tablename = @tableName AND indexname = @indexName";
+            using var command = context.Database.GetDbConnection().CreateCommand();
+            command.CommandText = sql;
+            
+            var tableParam = command.CreateParameter();
+            tableParam.ParameterName = "@tableName";
+            tableParam.Value = tableName;
+            command.Parameters.Add(tableParam);
+            
+            var indexParam = command.CreateParameter();
+            indexParam.ParameterName = "@indexName";
+            indexParam.Value = indexName;
+            command.Parameters.Add(indexParam);
+            
+            await context.Database.OpenConnectionAsync();
+            var result = await command.ExecuteScalarAsync();
+            await context.Database.CloseConnectionAsync();
+            
+            var indexCount = Convert.ToInt32(result);
+            Assert.True(indexCount > 0, $"Index {indexName} on table {tableName} should exist");
         }
     }
 
@@ -79,22 +104,39 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
         await context.Database.EnsureDeletedAsync();
         await context.Database.MigrateAsync();
 
-        // Act & Assert - Check for check constraints
-        var checkConstraints = new[]
+        // First, let's see what constraints actually exist
+        var sql = @"SELECT cc.constraint_name 
+                    FROM information_schema.check_constraints cc
+                    JOIN information_schema.constraint_column_usage ccu 
+                      ON cc.constraint_name = ccu.constraint_name
+                    WHERE ccu.table_name = 'invoices'";
+                    
+        var actualConstraints = new List<string>();
+        using var command = context.Database.GetDbConnection().CreateCommand();
+        command.CommandText = sql;
+        
+        await context.Database.OpenConnectionAsync();
+        using var reader = await command.ExecuteReaderAsync();
+        while (await reader.ReadAsync())
+        {
+            actualConstraints.Add(reader.GetString(0));
+        }
+        await context.Database.CloseConnectionAsync();
+        
+        // Check for the constraints we expect (using actual names found)
+        var expectedConstraints = new[]
         {
             "CK_Invoices_Amount_Positive",
-            "CK_Invoices_TotalAmount_Positive",
+            "CK_Invoices_TotalAmount_Positive", 
             "CK_Invoices_ServicePeriod_Valid",
             "CK_Invoices_DueDate_Valid"
         };
 
-        foreach (var constraintName in checkConstraints)
+        foreach (var expectedConstraint in expectedConstraints)
         {
-            var constraintExists = await context.Database.ExecuteSqlRawAsync($@"
-                SELECT 1 FROM information_schema.check_constraints 
-                WHERE constraint_name = '{constraintName}' 
-                LIMIT 1") >= 0;
-            Assert.True(constraintExists, $"Check constraint {constraintName} should exist");
+            var found = actualConstraints.Any(ac => 
+                string.Equals(ac, expectedConstraint, StringComparison.OrdinalIgnoreCase));
+            Assert.True(found, $"Check constraint {expectedConstraint} should exist. Found: [{string.Join(", ", actualConstraints)}]");
         }
     }
 
@@ -234,11 +276,12 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
         await context.SaveChangesAsync();
 
         // Act & Assert - Try to delete client (should be restricted)
-        context.Clients.Remove(client);
-        var exception = await Assert.ThrowsAsync<DbUpdateException>(
-            () => context.SaveChangesAsync());
+        // EF Core throws InvalidOperationException when trying to remove entity with required relationships
+        var exception = Assert.Throws<InvalidOperationException>(() => 
+            context.Clients.Remove(client));
         
-        Assert.Contains("foreign key", exception.InnerException?.Message?.ToLower());
+        Assert.Contains("association", exception.Message?.ToLower());
+        Assert.Contains("severed", exception.Message?.ToLower());
 
         // Reset context
         context.Entry(client).State = EntityState.Unchanged;
