@@ -84,15 +84,21 @@ public class ApplicationDbContext : IdentityDbContext
 
             if (entity.State == EntityState.Added)
             {
-                var createdAtProperty = entity.Property("CreatedAt");
-                if (createdAtProperty.CurrentValue == null || 
-                    (createdAtProperty.CurrentValue is DateTime createdAt && createdAt == DateTime.MinValue))
-                    createdAtProperty.CurrentValue = now;
+                // Check if entity has CreatedAt property before trying to set it
+                var createdAtProperty = entity.Properties.FirstOrDefault(p => p.Metadata.Name == "CreatedAt");
+                if (createdAtProperty != null)
+                {
+                    if (createdAtProperty.CurrentValue == null || 
+                        (createdAtProperty.CurrentValue is DateTime createdAt && createdAt == DateTime.MinValue))
+                        createdAtProperty.CurrentValue = now;
+                }
             }
 
-            if (entity.Property("UpdatedAt") != null)
+            // Check if entity has UpdatedAt property before trying to set it
+            var updatedAtProperty = entity.Properties.FirstOrDefault(p => p.Metadata.Name == "UpdatedAt");
+            if (updatedAtProperty != null)
             {
-                entity.Property("UpdatedAt").CurrentValue = now;
+                updatedAtProperty.CurrentValue = now;
             }
         }
 
