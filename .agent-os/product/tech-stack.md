@@ -18,7 +18,6 @@
 
 ### Backend
 - **ORM:** Entity Framework Core 8.0
-- **API Documentation:** Swagger/OpenAPI
 - **Authentication:** ASP.NET Core Identity
 - **Email Service:** SendGrid or SMTP
 - **Logging:** Serilog with Seq Sink
@@ -38,7 +37,6 @@
 - **Code Quality:** SonarQube
 
 ### Architecture Patterns
-- **Pattern:** Clean Architecture / Domain-Driven Design
-- **API Style:** RESTful API
+- **Pattern:** Clean Architecture / Domain-Driven DesignAPI
 - **Data Access:** Repository Pattern with Unit of Work
 - **Persistence:** CRUD operations (No Event Sourcing as specified)

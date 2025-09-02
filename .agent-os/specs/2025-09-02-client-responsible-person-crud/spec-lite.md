@@ -1,0 +1,3 @@
+# Spec Summary (Lite)
+
+Implement CRUD operations for managing responsible persons associated with clients in the invoice management system. This feature allows telecom analysts to maintain contact information, assign responsibility for invoice oversight, and designate primary contacts for automated communications. The system will validate contact data and ensure proper client associations while integrating seamlessly into existing client management workflows.

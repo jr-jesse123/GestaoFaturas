@@ -40,7 +40,7 @@
 
 - Email service provider account (SendGrid)
 - Notification template system
-- Background job processing (Hangfire)
+- Background job processing (TinkerQ)
 
 ## Phase 3: Reporting & Analytics
 
@@ -54,7 +54,6 @@
 - [ ] Audit trail system - Complete history of all changes `M`
 - [ ] Invoice comparison tools - Month-over-month, year-over-year analysis `M`
 - [ ] Cost center budget tracking - Budget vs actual reporting `M`
-- [ ] API for external integrations - RESTful API with Swagger documentation `L`
 - [ ] Mobile-responsive interface - Full functionality on mobile devices `M`
 
 ### Dependencies
