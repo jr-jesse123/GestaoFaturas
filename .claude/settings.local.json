@@ -31,7 +31,8 @@
       "Bash(dotnet add:*)",
       "Bash(dotnet run:*)",
       "Bash(dotnet remove:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "Bash(git checkout:*)"
     ],
     "deny": [],
     "ask": []
