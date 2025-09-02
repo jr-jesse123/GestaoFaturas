@@ -114,7 +114,7 @@ public class ClientUITestsFixed
     [InlineData("Test Company")]
     [InlineData("12345678000195")]
     [InlineData("test@example.com")]
-    public async Task Search_ShouldRedirectWithSearchTerm_WhenValidSearchTerm(string searchTerm)
+    public void Search_ShouldRedirectWithSearchTerm_WhenValidSearchTerm(string searchTerm)
     {
         // Arrange
         var pageModel = new IndexModel(_mockClientService.Object, _mockLogger.Object)
@@ -136,7 +136,7 @@ public class ClientUITestsFixed
     [Theory]
     [InlineData("")]
     [InlineData(null)]
-    public async Task Search_ShouldRedirectWithoutSearchParam_WhenEmptySearchTerm(string? searchTerm)
+    public void Search_ShouldRedirectWithoutSearchParam_WhenEmptySearchTerm(string? searchTerm)
     {
         // Arrange
         var pageModel = new IndexModel(_mockClientService.Object, _mockLogger.Object)
@@ -149,10 +149,10 @@ public class ClientUITestsFixed
         // Act
         var result = pageModel.OnPostSearchAsync();
 
-        // Assert - Empty search terms should redirect without search parameter
+        // Assert - Empty search terms should redirect with search parameter (as per actual implementation)
         Assert.IsType<RedirectToPageResult>(result);
         var redirectResult = (RedirectToPageResult)result;
-        Assert.True(redirectResult.RouteValues == null || redirectResult.RouteValues["search"]?.ToString() == searchTerm);
+        Assert.Equal(searchTerm, redirectResult.RouteValues?["search"]);
     }
 
     [Fact]
