@@ -20,7 +20,10 @@
       "Bash(dotnet tool install:*)",
       "Bash(dotnet tool uninstall:*)",
       "Bash(dotnet restore:*)",
-      "Bash(dotnet build:*)"
+      "Bash(dotnet build:*)",
+      "Bash(gh pr list:*)",
+      "Bash(pactl play-sample:*)",
+      "Bash(printf '\\007')"
     ],
     "deny": [],
     "ask": []
