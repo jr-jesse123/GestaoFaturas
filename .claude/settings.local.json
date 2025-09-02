@@ -23,7 +23,14 @@
       "Bash(dotnet build:*)",
       "Bash(gh pr list:*)",
       "Bash(pactl play-sample:*)",
-      "Bash(printf '\\007')"
+      "Bash(printf '\\007')",
+      "Bash(gh pr view:*)",
+      "Bash(dotnet --version)",
+      "Bash(dotnet new:*)",
+      "Bash(dotnet sln add:*)",
+      "Bash(dotnet add:*)",
+      "Bash(dotnet run:*)",
+      "Bash(dotnet remove:*)"
     ],
     "deny": [],
     "ask": []
