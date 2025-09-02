@@ -33,16 +33,16 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
 ### 3. Razor Pages Implementation
 
-- [ ] 3.1 Write tests for all Page Models and their handlers
-- [ ] 3.2 Create Clients/Index.cshtml page with client listing and search functionality
-- [ ] 3.3 Create Clients/Index.cshtml.cs PageModel with pagination and filtering logic
-- [ ] 3.4 Create Clients/Details.cshtml page for comprehensive client information display
-- [ ] 3.5 Create Clients/Details.cshtml.cs PageModel with client retrieval logic
-- [ ] 3.6 Create Clients/Create.cshtml page with client creation form
-- [ ] 3.7 Create Clients/Create.cshtml.cs PageModel with POST handler for client creation
-- [ ] 3.8 Create Clients/Edit.cshtml page with client editing form
-- [ ] 3.9 Create Clients/Edit.cshtml.cs PageModel with GET/POST handlers for updates
-- [ ] 3.10 Verify all Razor Pages tests pass
+- [x] 3.1 Write tests for all Page Models and their handlers
+- [x] 3.2 Create Clients/Index.cshtml page with client listing and search functionality
+- [x] 3.3 Create Clients/Index.cshtml.cs PageModel with pagination and filtering logic
+- [x] 3.4 Create Clients/Details.cshtml page for comprehensive client information display
+- [x] 3.5 Create Clients/Details.cshtml.cs PageModel with client retrieval logic
+- [x] 3.6 Create Clients/Create.cshtml page with client creation form
+- [x] 3.7 Create Clients/Create.cshtml.cs PageModel with POST handler for client creation
+- [x] 3.8 Create Clients/Edit.cshtml page with client editing form
+- [x] 3.9 Create Clients/Edit.cshtml.cs PageModel with GET/POST handlers for updates
+- [x] 3.10 Verify all Razor Pages tests pass
 
 ### 4. UI/UX Implementation
 

@@ -1,0 +1,262 @@
+@page
+@model GestaoFaturas.Api.Pages.Clients.EditModel
+@{
+    ViewData["Title"] = "Edit Client";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Clients/Index">Clients</a></li>
+                    <li class="breadcrumb-item"><a asp-page="Details" asp-route-id="@Model.ClientId">@Model.ClientInput.CompanyName</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">Edit</li>
+                </ol>
+            </nav>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">@ViewData["Title"]</h1>
+                <div class="btn-group" role="group">
+                    <a asp-page="Details" asp-route-id="@Model.ClientId" class="btn btn-outline-info">
+                        <i class="fas fa-eye me-2"></i>View Details
+                    </a>
+                    <a asp-page="/Clients/Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <form method="post">
+                        <input asp-for="ClientId" type="hidden" />
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="card-title mb-0">
+                                    <i class="fas fa-building me-2"></i>Edit Client Information
+                                </h5>
+                                <small class="text-muted">Client ID: #@Model.ClientId</small>
+                            </div>
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <!-- Company Name -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.CompanyName" class="form-label"></label>
+                                        <input asp-for="ClientInput.CompanyName" class="form-control" placeholder="Enter company name" />
+                                        <span asp-validation-for="ClientInput.CompanyName" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Trade Name -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.TradeName" class="form-label"></label>
+                                        <input asp-for="ClientInput.TradeName" class="form-control" placeholder="Enter trade name (optional)" />
+                                        <span asp-validation-for="ClientInput.TradeName" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Tax ID -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.TaxId" class="form-label"></label>
+                                        <input asp-for="ClientInput.TaxId" class="form-control tax-id-input" 
+                                               placeholder="Enter CNPJ (14 digits)" maxlength="14" />
+                                        <div class="form-text">Brazilian CNPJ (14 digits) or CPF format</div>
+                                        <span asp-validation-for="ClientInput.TaxId" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Email -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.Email" class="form-label"></label>
+                                        <input asp-for="ClientInput.Email" class="form-control" type="email" 
+                                               placeholder="Enter email address (optional)" />
+                                        <span asp-validation-for="ClientInput.Email" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Phone -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.Phone" class="form-label"></label>
+                                        <input asp-for="ClientInput.Phone" class="form-control phone-input" 
+                                               placeholder="Enter phone number (optional)" />
+                                        <span asp-validation-for="ClientInput.Phone" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Contact Person -->
+                                    <div class="col-md-6">
+                                        <label asp-for="ClientInput.ContactPerson" class="form-label"></label>
+                                        <input asp-for="ClientInput.ContactPerson" class="form-control" 
+                                               placeholder="Enter contact person name (optional)" />
+                                        <span asp-validation-for="ClientInput.ContactPerson" class="text-danger"></span>
+                                    </div>
+
+                                    <!-- Address -->
+                                    <div class="col-12">
+                                        <label asp-for="ClientInput.Address" class="form-label"></label>
+                                        <textarea asp-for="ClientInput.Address" class="form-control" rows="3" 
+                                                  placeholder="Enter full address (optional)"></textarea>
+                                        <span asp-validation-for="ClientInput.Address" class="text-danger"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-light">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted">
+                                        <i class="fas fa-info-circle me-1"></i>
+                                        Changes will be saved immediately when you click "Update Client"
+                                    </small>
+                                    <div class="d-flex gap-2">
+                                        <a asp-page="Details" asp-route-id="@Model.ClientId" class="btn btn-secondary">
+                                            <i class="fas fa-times me-2"></i>Cancel
+                                        </a>
+                                        <button type="submit" class="btn btn-primary">
+                                            <i class="fas fa-save me-2"></i>Update Client
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        // Tax ID formatting and validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const taxIdInput = document.querySelector('.tax-id-input');
+            if (taxIdInput) {
+                // Check initial state
+                const initialValue = taxIdInput.value.replace(/\D/g, '');
+                if (initialValue.length === 14) {
+                    taxIdInput.classList.add('is-valid');
+                }
+                
+                taxIdInput.addEventListener('input', function(e) {
+                    // Remove non-digits
+                    let value = e.target.value.replace(/\D/g, '');
+                    // Limit to 14 characters
+                    if (value.length > 14) {
+                        value = value.slice(0, 14);
+                    }
+                    e.target.value = value;
+                    
+                    // Visual feedback for validation
+                    if (value.length === 14) {
+                        e.target.classList.remove('is-invalid');
+                        e.target.classList.add('is-valid');
+                    } else if (value.length > 0) {
+                        e.target.classList.remove('is-valid');
+                        e.target.classList.add('is-invalid');
+                    } else {
+                        e.target.classList.remove('is-valid', 'is-invalid');
+                    }
+                });
+            }
+            
+            // Phone formatting
+            const phoneInput = document.querySelector('.phone-input');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function(e) {
+                    // Basic phone formatting for Brazilian numbers
+                    let value = e.target.value.replace(/\D/g, '');
+                    if (value.length > 11) {
+                        value = value.slice(0, 11);
+                    }
+                    
+                    // Format as (XX) XXXXX-XXXX for mobile or (XX) XXXX-XXXX for landline
+                    if (value.length >= 11) {
+                        value = value.replace(/(\d{2})(\d{5})(\d{4})/, '($1) $2-$3');
+                    } else if (value.length >= 10) {
+                        value = value.replace(/(\d{2})(\d{4})(\d{4})/, '($1) $2-$3');
+                    } else if (value.length >= 6) {
+                        value = value.replace(/(\d{2})(\d{4})(\d*)/, '($1) $2-$3');
+                    } else if (value.length >= 2) {
+                        value = value.replace(/(\d{2})(\d*)/, '($1) $2');
+                    }
+                    
+                    e.target.value = value;
+                });
+            }
+            
+            // Form validation feedback with change tracking
+            const form = document.querySelector('form');
+            const originalValues = {};
+            
+            if (form) {
+                // Store original values
+                const inputs = form.querySelectorAll('input, textarea');
+                inputs.forEach(input => {
+                    originalValues[input.name] = input.value;
+                });
+                
+                // Track changes
+                let hasChanges = false;
+                inputs.forEach(input => {
+                    input.addEventListener('input', function() {
+                        hasChanges = Object.keys(originalValues).some(name => {
+                            const currentInput = form.querySelector(`[name="${name}"]`);
+                            return currentInput && currentInput.value !== originalValues[name];
+                        });
+                        
+                        const submitBtn = form.querySelector('button[type="submit"]');
+                        if (submitBtn) {
+                            if (hasChanges) {
+                                submitBtn.classList.remove('btn-primary');
+                                submitBtn.classList.add('btn-warning');
+                                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Save Changes';
+                            } else {
+                                submitBtn.classList.remove('btn-warning');
+                                submitBtn.classList.add('btn-primary');
+                                submitBtn.innerHTML = '<i class="fas fa-save me-2"></i>Update Client';
+                            }
+                        }
+                    });
+                });
+                
+                // Warn about unsaved changes
+                window.addEventListener('beforeunload', function(e) {
+                    if (hasChanges) {
+                        e.preventDefault();
+                        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                        return e.returnValue;
+                    }
+                });
+                
+                // Don't warn when submitting the form
+                form.addEventListener('submit', function() {
+                    hasChanges = false;
+                });
+                
+                form.addEventListener('submit', function(e) {
+                    const inputs = form.querySelectorAll('input[required], textarea[required]');
+                    let isValid = true;
+                    
+                    inputs.forEach(input => {
+                        if (!input.value.trim()) {
+                            input.classList.add('is-invalid');
+                            isValid = false;
+                        } else {
+                            input.classList.remove('is-invalid');
+                            input.classList.add('is-valid');
+                        }
+                    });
+                    
+                    if (!isValid) {
+                        e.preventDefault();
+                        // Scroll to first invalid field
+                        const firstInvalid = form.querySelector('.is-invalid');
+                        if (firstInvalid) {
+                            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                            firstInvalid.focus();
+                        }
+                    }
+                });
+            }
+        });
+    </script>
+}

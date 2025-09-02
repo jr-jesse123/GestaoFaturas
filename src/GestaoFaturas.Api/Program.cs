@@ -30,6 +30,7 @@ public class Program
 
             // Add services to the container
             builder.Services.AddControllers();
+            builder.Services.AddRazorPages();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
 
@@ -82,6 +83,7 @@ public class Program
             app.UseCors("AllowAll");
             app.UseAuthorization();
             app.MapControllers();
+            app.MapRazorPages();
 
             Log.Information("GestaoFaturas API started successfully");
             app.Run();
