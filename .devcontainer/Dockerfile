@@ -40,6 +40,7 @@ RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
 
 # Install Claude Code
 RUN npm install -g @anthropic-ai/claude-code
+RUN claude mcp add playwright npx @playwright/mcp@latest
 
 # Create workspace directory
 WORKDIR /workspace
