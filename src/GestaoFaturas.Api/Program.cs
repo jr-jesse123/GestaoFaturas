@@ -1,4 +1,6 @@
 using GestaoFaturas.Api.Data;
+using GestaoFaturas.Api.Data.Repositories;
+using GestaoFaturas.Api.Services;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 
@@ -47,6 +49,13 @@ public class Program
                     .EnableSensitiveDataLogging(builder.Environment.IsDevelopment())
                     .EnableDetailedErrors(builder.Environment.IsDevelopment());
             });
+
+            // Register Repositories and Services
+            builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            
+            // Register Business Services
+            builder.Services.AddScoped<IClientService, ClientService>();
 
             // Add CORS
             builder.Services.AddCors(options =>

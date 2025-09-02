@@ -9,27 +9,27 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
 ### 1. Data Layer Implementation
 
-- [ ] 1.1 Write tests for ClientDto, CreateClientDto, and UpdateClientDto classes
-- [ ] 1.2 Create ClientDto with all client properties for data transfer
-- [ ] 1.3 Create CreateClientDto for client creation with validation attributes
-- [ ] 1.4 Create UpdateClientDto for client updates with validation attributes
-- [ ] 1.5 Implement static mapping functions between entities and DTOs
-- [ ] 1.6 Add server-side validation for tax ID format (CNPJ/CPF)
-- [ ] 1.7 Add email format validation and required field constraints
-- [ ] 1.8 Verify all data layer tests pass
+- [x] 1.1 Write tests for ClientDto, CreateClientDto, and UpdateClientDto classes
+- [x] 1.2 Create ClientDto with all client properties for data transfer
+- [x] 1.3 Create CreateClientDto for client creation with validation attributes
+- [x] 1.4 Create UpdateClientDto for client updates with validation attributes
+- [x] 1.5 Implement static mapping functions between entities and DTOs
+- [x] 1.6 Add server-side validation for tax ID format (CNPJ/CPF)
+- [x] 1.7 Add email format validation and required field constraints
+- [x] 1.8 Verify all data layer tests pass
 
 ### 2. Service Layer Implementation
 
-- [ ] 2.1 Write tests for ClientService with all CRUD operations
-- [ ] 2.2 Create IClientService interface with method signatures
-- [ ] 2.3 Implement ClientService with dependency injection for IClientRepository
-- [ ] 2.4 Add CreateClientAsync method with business logic and validation
-- [ ] 2.5 Add GetClientByIdAsync and GetClientsAsync methods with pagination
-- [ ] 2.6 Add UpdateClientAsync method with audit trail tracking
-- [ ] 2.7 Add DeactivateClientAsync method for soft delete (IsActive = false)
-- [ ] 2.8 Implement search and filtering functionality (name, tax ID, email)
-- [ ] 2.9 Register ClientService in dependency injection container
-- [ ] 2.10 Verify all service layer tests pass
+- [x] 2.1 Write tests for ClientService with all CRUD operations
+- [x] 2.2 Create IClientService interface with method signatures
+- [x] 2.3 Implement ClientService with dependency injection for IClientRepository
+- [x] 2.4 Add CreateClientAsync method with business logic and validation
+- [x] 2.5 Add GetClientByIdAsync and GetClientsAsync methods with pagination
+- [x] 2.6 Add UpdateClientAsync method with audit trail tracking
+- [x] 2.7 Add DeactivateClientAsync method for soft delete (IsActive = false)
+- [x] 2.8 Implement search and filtering functionality (name, tax ID, email)
+- [x] 2.9 Register ClientService in dependency injection container
+- [x] 2.10 Verify all service layer tests pass
 
 ### 3. Razor Pages Implementation
 
