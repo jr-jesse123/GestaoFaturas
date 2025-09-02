@@ -30,7 +30,8 @@
       "Bash(dotnet sln add:*)",
       "Bash(dotnet add:*)",
       "Bash(dotnet run:*)",
-      "Bash(dotnet remove:*)"
+      "Bash(dotnet remove:*)",
+      "Bash(sed:*)"
     ],
     "deny": [],
     "ask": []

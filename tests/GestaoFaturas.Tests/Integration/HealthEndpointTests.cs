@@ -2,13 +2,15 @@ using System.Net;
 using System.Text.Json;
 using FluentAssertions;
 using GestaoFaturas.Api;
+using GestaoFaturas.Tests.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace GestaoFaturas.Tests.Integration;
 
 public class HealthEndpointTests : ApiIntegrationTestBase
 {
-    public HealthEndpointTests(WebApplicationFactory<Program> factory) : base(factory)
+    public HealthEndpointTests(WebApplicationFactory<Program> factory, PostgreSqlFixture postgreSqlFixture) 
+        : base(factory, postgreSqlFixture)
     {
     }
 
