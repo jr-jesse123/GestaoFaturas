@@ -60,7 +60,7 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 ### 5. Integration and Testing
 
 - [ ] 5.1 Write integration tests for complete client management workflows
-- [ ] 5.2 Add navigation links to main dashboard for client management access
+- [x] 5.2 Add navigation links to main dashboard for client management access
 - [ ] 5.3 Test client creation workflow with validation error handling
 - [ ] 5.4 Test client listing with pagination, search, and filtering
 - [ ] 5.5 Test client details view with associated cost centers display
