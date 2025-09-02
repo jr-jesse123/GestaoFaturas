@@ -1,13 +1,10 @@
 {
     "configurations": [
         {
-            "name": "Containers: .NET Launch",
-            "type": "docker",
+            "name": "C#: Gestão Debug",
+            "type": "dotnet",
             "request": "launch",
-            "preLaunchTask": "docker-run: debug",
-            "netCore": {
-                "appProject": "${workspaceFolder}/src/GestaoFaturas.Api/GestaoFaturas.Api.csproj"
-            }
+            "projectPath": "${workspaceFolder}/src/GestaoFaturas.AppHost/GestaoFaturas.AppHost.csproj"
         }
     ]
 }

@@ -74,7 +74,8 @@
         "aaron-bond.better-comments",
         "Anthropic.claude-code",
         "formulahendry.dotnet-test-explorer",
-        "fernandoescolar.vscode-solution-explorer"
+        "fernandoescolar.vscode-solution-explorer",
+        "bierner.markdown-mermaid"
       ]
     }
   },
