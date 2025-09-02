@@ -1,34 +1,19 @@
 using GestaoFaturas.Api;
-using Microsoft.AspNetCore.Hosting;
+using GestaoFaturas.Tests.Fixtures;
 using Microsoft.AspNetCore.Mvc.Testing;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace GestaoFaturas.Tests.Integration;
 
-public class ApiIntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>
+public class ApiIntegrationTestBase : IClassFixture<WebApplicationFactory<Program>>, IClassFixture<PostgreSqlFixture>
 {
     protected readonly WebApplicationFactory<Program> Factory;
     protected readonly HttpClient Client;
+    protected readonly PostgreSqlFixture PostgreSqlFixture;
 
-    public ApiIntegrationTestBase(WebApplicationFactory<Program> factory)
+    public ApiIntegrationTestBase(WebApplicationFactory<Program> factory, PostgreSqlFixture postgreSqlFixture)
     {
-        Factory = factory.WithWebHostBuilder(builder =>
-        {
-            builder.UseEnvironment("Testing");
-            
-            builder.ConfigureServices(services =>
-            {
-                // Override services for testing if needed
-                // For example, replace database with in-memory database
-            });
-            
-            builder.ConfigureLogging(logging =>
-            {
-                logging.ClearProviders();
-            });
-        });
-
+        PostgreSqlFixture = postgreSqlFixture;
+        Factory = factory;
         Client = Factory.CreateClient();
     }
 }

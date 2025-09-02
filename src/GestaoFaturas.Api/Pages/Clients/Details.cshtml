@@ -1,0 +1,234 @@
+@page
+@model GestaoFaturas.Api.Pages.Clients.DetailsModel
+@{
+    ViewData["Title"] = "Client Details";
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <!-- Breadcrumb Navigation -->
+            <nav aria-label="breadcrumb" class="mb-4">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a asp-page="/Clients/Index">Clients</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">@Model.Client?.CompanyName</li>
+                </ol>
+            </nav>
+
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h1 class="h3 mb-0">@ViewData["Title"]</h1>
+                <div class="btn-group" role="group">
+                    <a asp-page="Edit" asp-route-id="@Model.Client!.Id" class="btn btn-primary">
+                        <i class="fas fa-edit me-2"></i>Edit Client
+                    </a>
+                    <a asp-page="/Clients/Index" class="btn btn-outline-secondary">
+                        <i class="fas fa-arrow-left me-2"></i>Back to List
+                    </a>
+                </div>
+            </div>
+
+            <div class="row">
+                <!-- Client Information Card -->
+                <div class="col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-building me-2"></i>Client Information
+                            </h5>
+                            @if (Model.Client!.IsActive)
+                            {
+                                <span class="badge bg-success fs-6">Active</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary fs-6">Inactive</span>
+                            }
+                        </div>
+                        <div class="card-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Company Name</label>
+                                    <p class="form-control-plaintext border-bottom pb-2">@Model.Client.CompanyName</p>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Client.TradeName))
+                                {
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Trade Name</label>
+                                        <p class="form-control-plaintext border-bottom pb-2">@Model.Client.TradeName</p>
+                                    </div>
+                                }
+                                <div class="col-md-6">
+                                    <label class="form-label fw-bold">Tax ID (CNPJ/CPF)</label>
+                                    <p class="form-control-plaintext border-bottom pb-2">
+                                        <code class="bg-light px-2 py-1 rounded">@Model.Client.TaxId</code>
+                                    </p>
+                                </div>
+                                @if (!string.IsNullOrEmpty(Model.Client.Email))
+                                {
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Email Address</label>
+                                        <p class="form-control-plaintext border-bottom pb-2">
+                                            <a href="mailto:@Model.Client.Email" class="text-decoration-none">
+                                                <i class="fas fa-envelope me-2"></i>@Model.Client.Email
+                                            </a>
+                                        </p>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Client.Phone))
+                                {
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Phone Number</label>
+                                        <p class="form-control-plaintext border-bottom pb-2">
+                                            <a href="tel:@Model.Client.Phone" class="text-decoration-none">
+                                                <i class="fas fa-phone me-2"></i>@Model.Client.Phone
+                                            </a>
+                                        </p>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Client.ContactPerson))
+                                {
+                                    <div class="col-md-6">
+                                        <label class="form-label fw-bold">Contact Person</label>
+                                        <p class="form-control-plaintext border-bottom pb-2">
+                                            <i class="fas fa-user me-2"></i>@Model.Client.ContactPerson
+                                        </p>
+                                    </div>
+                                }
+                                @if (!string.IsNullOrEmpty(Model.Client.Address))
+                                {
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Address</label>
+                                        <p class="form-control-plaintext border-bottom pb-2">
+                                            <i class="fas fa-map-marker-alt me-2"></i>@Model.Client.Address
+                                        </p>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Audit Information Card -->
+                <div class="col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-history me-2"></i>Audit Information
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Client ID</label>
+                                <p class="form-control-plaintext">
+                                    <span class="badge bg-info text-dark">#@Model.Client.Id</span>
+                                </p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Created</label>
+                                <p class="form-control-plaintext">
+                                    <i class="fas fa-calendar-plus me-2 text-success"></i>
+                                    @Model.Client.CreatedAt.ToString("MMM dd, yyyy")
+                                    <br>
+                                    <small class="text-muted">@Model.Client.CreatedAt.ToString("h:mm tt")</small>
+                                </p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Last Updated</label>
+                                <p class="form-control-plaintext">
+                                    <i class="fas fa-calendar-edit me-2 text-primary"></i>
+                                    @Model.Client.UpdatedAt.ToString("MMM dd, yyyy")
+                                    <br>
+                                    <small class="text-muted">@Model.Client.UpdatedAt.ToString("h:mm tt")</small>
+                                </p>
+                            </div>
+                            @if (Model.Client.CreatedAt != Model.Client.UpdatedAt)
+                            {
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Time Since Update</label>
+                                    <p class="form-control-plaintext">
+                                        @{
+                                            var timeDiff = DateTime.UtcNow - Model.Client.UpdatedAt;
+                                            string timeAgo;
+                                            if (timeDiff.TotalDays >= 1)
+                                                timeAgo = $"{(int)timeDiff.TotalDays} day{((int)timeDiff.TotalDays != 1 ? "s" : "")} ago";
+                                            else if (timeDiff.TotalHours >= 1)
+                                                timeAgo = $"{(int)timeDiff.TotalHours} hour{((int)timeDiff.TotalHours != 1 ? "s" : "")} ago";
+                                            else if (timeDiff.TotalMinutes >= 1)
+                                                timeAgo = $"{(int)timeDiff.TotalMinutes} minute{((int)timeDiff.TotalMinutes != 1 ? "s" : "")} ago";
+                                            else
+                                                timeAgo = "Just now";
+                                        }
+                                        <small class="text-muted">@timeAgo</small>
+                                    </p>
+                                </div>
+                            }
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions Card -->
+                    <div class="card mt-4">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-bolt me-2"></i>Quick Actions
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="d-grid gap-2">
+                                <a asp-page="Edit" asp-route-id="@Model.Client.Id" class="btn btn-outline-primary">
+                                    <i class="fas fa-edit me-2"></i>Edit Client
+                                </a>
+                                @if (Model.Client.IsActive)
+                                {
+                                    <form method="post" asp-page="/Clients/Index" asp-page-handler="ToggleStatus" asp-route-id="@Model.Client.Id" class="d-inline">
+                                        <button type="submit" class="btn btn-outline-warning w-100" 
+                                                onclick="return confirm('Are you sure you want to deactivate this client?')">
+                                            <i class="fas fa-pause me-2"></i>Deactivate Client
+                                        </button>
+                                    </form>
+                                }
+                                <a asp-page="/Clients/Index" class="btn btn-outline-secondary">
+                                    <i class="fas fa-list me-2"></i>All Clients
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            @* Future feature placeholder for cost centers and invoices *@
+            @*
+            <!-- Related Information -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-sitemap me-2"></i>Cost Centers
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Cost centers functionality will be available soon.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">
+                                <i class="fas fa-file-invoice me-2"></i>Recent Invoices
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="text-muted mb-0">
+                                <i class="fas fa-info-circle me-2"></i>Invoices functionality will be available soon.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            *@
+        </div>
+    </div>
+</div>
