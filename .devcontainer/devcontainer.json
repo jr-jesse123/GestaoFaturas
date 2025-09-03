@@ -39,7 +39,6 @@
         }
       },
       "extensions": [
-        // C# and .NET
         "ms-dotnettools.csdevkit",
         "ms-dotnettools.csharp",
         "ms-dotnettools.vscode-dotnet-runtime",
