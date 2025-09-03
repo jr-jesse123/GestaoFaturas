@@ -48,9 +48,11 @@ public class Program
             // Register Repositories and Services
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
+            builder.Services.AddScoped<IResponsiblePersonRepository, ResponsiblePersonRepository>();
 
             // Register Business Services
             builder.Services.AddScoped<IClientService, ClientService>();
+            builder.Services.AddScoped<IResponsiblePersonValidationService, ResponsiblePersonValidationService>();
 
             // Add CORS
             builder.Services.AddCors(options =>

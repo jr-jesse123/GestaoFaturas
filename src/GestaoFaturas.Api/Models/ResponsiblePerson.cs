@@ -30,6 +30,7 @@ public class ResponsiblePerson
 
     public bool IsActive { get; set; } = true;
     public bool ReceivesNotifications { get; set; } = true;
+    public bool IsPrimaryContact { get; set; } = false;
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }

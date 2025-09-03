@@ -48,26 +48,64 @@ public class ResponsiblePersonRepository : Repository<ResponsiblePerson>, IRespo
             .ToListAsync(cancellationToken);
     }
 
-    // New methods for Client-based operations
-    public async Task<IEnumerable<ResponsiblePerson>> GetByClientAsync(int clientId, CancellationToken cancellationToken = default)
+    // Client-based operations
+    public async Task<ResponsiblePerson?> GetByIdWithClientAsync(int id, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Where(p => p.Id == id)
+            .Include(p => p.Client)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<IEnumerable<ResponsiblePerson>> GetByClientIdAsync(int clientId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
             .Where(p => p.ClientId == clientId)
             .Include(p => p.Client)
-            .OrderBy(p => p.Name)
+            .OrderBy(p => p.IsPrimaryContact ? 0 : 1)
+            .ThenBy(p => p.Name)
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<ResponsiblePerson?> GetPrimaryByClientAsync(int clientId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<ResponsiblePerson>> GetActiveByClientIdAsync(int clientId, CancellationToken cancellationToken = default)
     {
-        // Primary is now handled via CostCenterResponsibles
-        var primaryAssignment = await _context.CostCenterResponsibles
-            .Where(ccr => ccr.IsPrimary && ccr.ResponsiblePerson.ClientId == clientId)
-            .Include(ccr => ccr.ResponsiblePerson)
-            .ThenInclude(rp => rp.Client)
-            .Select(ccr => ccr.ResponsiblePerson)
-            .FirstOrDefaultAsync(cancellationToken);
+        return await _dbSet
+            .Where(p => p.ClientId == clientId && p.IsActive)
+            .Include(p => p.Client)
+            .OrderBy(p => p.IsPrimaryContact ? 0 : 1)
+            .ThenBy(p => p.Name)
+            .ToListAsync(cancellationToken);
+    }
 
-        return primaryAssignment;
+    public async Task<ResponsiblePerson?> GetPrimaryContactAsync(int clientId, CancellationToken cancellationToken = default)
+    {
+        return await _dbSet
+            .Where(p => p.ClientId == clientId && p.IsPrimaryContact)
+            .Include(p => p.Client)
+            .FirstOrDefaultAsync(cancellationToken);
+    }
+
+    public async Task<bool> HasPrimaryContactAsync(int clientId, int? excludeId = null, CancellationToken cancellationToken = default)
+    {
+        var query = _dbSet.Where(p => p.ClientId == clientId && p.IsPrimaryContact);
+        
+        if (excludeId.HasValue)
+        {
+            query = query.Where(p => p.Id != excludeId.Value);
+        }
+
+        return await query.AnyAsync(cancellationToken);
+    }
+
+    public async Task<bool> EmailExistsAsync(string email, int clientId, int? excludeId = null, CancellationToken cancellationToken = default)
+    {
+        var query = _dbSet.Where(p => p.Email == email && p.ClientId == clientId);
+        
+        if (excludeId.HasValue)
+        {
+            query = query.Where(p => p.Id != excludeId.Value);
+        }
+
+        return await query.AnyAsync(cancellationToken);
     }
 }

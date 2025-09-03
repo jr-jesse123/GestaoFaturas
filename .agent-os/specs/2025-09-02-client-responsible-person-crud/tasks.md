@@ -7,14 +7,14 @@ These are the tasks to be completed for the spec detailed in @.agent-os/specs/20
 
 ## Tasks
 
-- [ ] 1. Database and Entity Layer Implementation
-  - [ ] 1.1 Write unit tests for ResponsiblePerson entity and relationships
-  - [ ] 1.2 Create ResponsiblePerson entity with proper Entity Framework mappings
-  - [ ] 1.3 Create and apply database migration for ResponsiblePersons table
-  - [ ] 1.4 Implement Repository pattern for ResponsiblePerson operations
-  - [ ] 1.5 Add validation logic for primary contact uniqueness constraint
-  - [ ] 1.6 Test database operations and foreign key relationships
-  - [ ] 1.7 Verify all entity and repository tests pass
+- [x] 1. Database and Entity Layer Implementation
+  - [x] 1.1 Write unit tests for ResponsiblePerson entity and relationships
+  - [x] 1.2 Create ResponsiblePerson entity with proper Entity Framework mappings
+  - [x] 1.3 Create and apply database migration for ResponsiblePersons table
+  - [x] 1.4 Implement Repository pattern for ResponsiblePerson operations
+  - [x] 1.5 Add validation logic for primary contact uniqueness constraint
+  - [x] 1.6 Test database operations and foreign key relationships
+  - [x] 1.7 Verify all entity and repository tests pass
 
 - [ ] 2. Razor Pages Structure and Routing
   - [ ] 2.1 Write integration tests for all ResponsiblePerson page routes
