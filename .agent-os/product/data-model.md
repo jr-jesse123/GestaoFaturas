@@ -15,10 +15,10 @@ This document describes the core entities and their relationships within the Inv
 
 #### Cost Center (Centro de Custo)
 - **Purpose:** Organizational unit for grouping invoices and budget tracking
-- **Key Attributes:** Code, Name, Budget Limit, Expected Invoice Range
-- **Relationships:** 
+- **Key Attributes:** Code, Name, Expected Invoice Range
+- **Relationships:**
   - Belongs to exactly one Client
-  - Has one or many Responsible Persons
+  - Has 0 or many Responsible Persons
 
 #### Responsible Person (Pessoa Responsável)
 - **Purpose:** Individual who receives notifications and manages cost centers
@@ -36,18 +36,14 @@ This document describes the core entities and their relationships within the Inv
 
 ```mermaid
 erDiagram
-    CLIENT ||--o{ COST_CENTER : has
+    COST_CENTER ||--o{  CLIENT : cost_center_has_client
 
-    COST_CENTER }o--|| CLIENT : belongs_to
+    COST_CENTER }o--|| RESPONSIBLE_PERSON   : cost_center_has_responsible_person
 
-    COST_CENTER }o--|| RESPONSIBLE_PERSON : managed_by
+   INVOICE }o--||  COST_CENTER : invoice_has_cost_center
 
-    RESPONSIBLE_PERSON }|--|{ CLIENT : oversees
+   CLIENT ||--|o RESPONSIBLE_PERSON  : client_may_have_responsible_person
 
-    RESPONSIBLE_PERSON }o--|{ COST_CENTER : responsible_for
-    
-    INVOICE }o--|| COST_CENTER : belongs_to
-    
     CLIENT {
         string TaxId PK
         string Name
@@ -56,20 +52,22 @@ erDiagram
         string ContactPhone
         boolean IsActive
     }
-    
+
     COST_CENTER {
         string Code PK
         date PeriodStart
         date PeriodEnd
         string ClientTaxId FK
+        int responsible_personId FK
         string Label
         decimal ExpectedMin
         decimal ExpectedMax
         boolean IsActive
     }
-    
+
     RESPONSIBLE_PERSON {
         int Id PK
+        string clientId fk
         string Name
         string Email
         string Phone
@@ -77,17 +75,20 @@ erDiagram
         boolean ReceivesNotifications
         boolean IsActive
     }
-    
+
     INVOICE {
         date PeriodStart PK
         date PeriodEnd PK
-        int CostCenterId FK
+        string CostCenterId FK, PK
+        string name
         decimal Amount
         string Status
         string AnalysisNotes
         datetime ReceivedAt
         datetime AnalyzedAt
     }
+
+
 ```
 
 ## Business Rules

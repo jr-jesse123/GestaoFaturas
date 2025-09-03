@@ -19,7 +19,8 @@ public class CostCenterRepository : Repository<CostCenter>, ICostCenterRepositor
     {
         return await _dbSet
             .Where(cc => cc.ClientId == clientId)
-            .Include(cc => cc.ResponsiblePersons)
+            .Include(cc => cc.CostCenterResponsibles)
+                .ThenInclude(ccr => ccr.ResponsiblePerson)
             .OrderBy(cc => cc.Name)
             .ToListAsync(cancellationToken);
     }
@@ -53,7 +54,8 @@ public class CostCenterRepository : Repository<CostCenter>, ICostCenterRepositor
     public async Task<CostCenter?> GetWithResponsiblePersonsAsync(int costCenterId, CancellationToken cancellationToken = default)
     {
         return await _dbSet
-            .Include(cc => cc.ResponsiblePersons)
+            .Include(cc => cc.CostCenterResponsibles)
+                .ThenInclude(ccr => ccr.ResponsiblePerson)
             .FirstOrDefaultAsync(cc => cc.Id == costCenterId, cancellationToken);
     }
 

@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GestaoFaturas.Api.Migrations
+namespace GestaoFaturas.Api.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration
@@ -232,6 +232,34 @@ namespace GestaoFaturas.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "responsible_persons",
+                columns: table => new
+                {
+                    id = table.Column<int>(type: "integer", nullable: false)
+                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    client_id = table.Column<int>(type: "integer", nullable: false),
+                    name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
+                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
+                    role = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
+                    department = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
+                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    receives_notifications = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("pk_responsible_persons", x => x.id);
+                    table.ForeignKey(
+                        name: "fk_responsible_persons_clients_client_id",
+                        column: x => x.client_id,
+                        principalTable: "clients",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "invoices",
                 columns: table => new
                 {
@@ -287,29 +315,27 @@ namespace GestaoFaturas.Api.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "responsible_persons",
+                name: "cost_center_responsibles",
                 columns: table => new
                 {
-                    id = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     cost_center_id = table.Column<int>(type: "integer", nullable: false),
-                    full_name = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    email = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: false),
-                    phone = table.Column<string>(type: "character varying(20)", maxLength: 20, nullable: true),
-                    position = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
-                    department = table.Column<string>(type: "character varying(50)", maxLength: 50, nullable: true),
-                    is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
-                    is_primary = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
-                    updated_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP")
+                    responsible_person_id = table.Column<int>(type: "integer", nullable: false),
+                    assigned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "CURRENT_TIMESTAMP"),
+                    is_primary = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_responsible_persons", x => x.id);
+                    table.PrimaryKey("pk_cost_center_responsibles", x => new { x.cost_center_id, x.responsible_person_id });
                     table.ForeignKey(
-                        name: "fk_responsible_persons_cost_centers_cost_center_id",
+                        name: "fk_cost_center_responsibles_cost_centers_cost_center_id",
                         column: x => x.cost_center_id,
                         principalTable: "cost_centers",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_cost_center_responsibles_responsible_persons_responsible_pe",
+                        column: x => x.responsible_person_id,
+                        principalTable: "responsible_persons",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -410,6 +436,18 @@ namespace GestaoFaturas.Api.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "ix_cost_center_responsibles_cost_center_primary",
+                table: "cost_center_responsibles",
+                columns: new[] { "cost_center_id", "is_primary" },
+                unique: true,
+                filter: "is_primary = true");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_cost_center_responsibles_responsible_person_id",
+                table: "cost_center_responsibles",
+                column: "responsible_person_id");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_cost_centers_client_code",
                 table: "cost_centers",
                 columns: new[] { "client_id", "code" },
@@ -508,14 +546,15 @@ namespace GestaoFaturas.Api.Migrations
                 column: "invoice_status_id");
 
             migrationBuilder.CreateIndex(
-                name: "ix_responsible_persons_cost_center_primary",
+                name: "ix_responsible_persons_client_id",
                 table: "responsible_persons",
-                columns: new[] { "cost_center_id", "is_primary" });
+                column: "client_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_responsible_persons_email",
                 table: "responsible_persons",
-                column: "email");
+                column: "email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_responsible_persons_is_active",
@@ -542,16 +581,19 @@ namespace GestaoFaturas.Api.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "invoice_histories");
+                name: "cost_center_responsibles");
 
             migrationBuilder.DropTable(
-                name: "responsible_persons");
+                name: "invoice_histories");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "responsible_persons");
 
             migrationBuilder.DropTable(
                 name: "invoices");

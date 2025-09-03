@@ -9,10 +9,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace GestaoFaturas.Api.Migrations
+namespace GestaoFaturas.Api.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250901215525_InitialCreate")]
+    [Migration("20250903025757_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -20,7 +20,7 @@ namespace GestaoFaturas.Api.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.8")
+                .HasAnnotation("ProductVersion", "8.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
@@ -174,6 +174,42 @@ namespace GestaoFaturas.Api.Migrations
                         .HasDatabaseName("ix_cost_centers_client_code");
 
                     b.ToTable("cost_centers", (string)null);
+                });
+
+            modelBuilder.Entity("GestaoFaturas.Api.Models.CostCenterResponsible", b =>
+                {
+                    b.Property<int>("CostCenterId")
+                        .HasColumnType("integer")
+                        .HasColumnName("cost_center_id");
+
+                    b.Property<int>("ResponsiblePersonId")
+                        .HasColumnType("integer")
+                        .HasColumnName("responsible_person_id");
+
+                    b.Property<DateTime>("AssignedAt")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("assigned_at")
+                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+                    b.Property<bool>("IsPrimary")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false)
+                        .HasColumnName("is_primary");
+
+                    b.HasKey("CostCenterId", "ResponsiblePersonId")
+                        .HasName("pk_cost_center_responsibles");
+
+                    b.HasIndex("ResponsiblePersonId")
+                        .HasDatabaseName("ix_cost_center_responsibles_responsible_person_id");
+
+                    b.HasIndex("CostCenterId", "IsPrimary")
+                        .IsUnique()
+                        .HasDatabaseName("ix_cost_center_responsibles_cost_center_primary")
+                        .HasFilter("is_primary = true");
+
+                    b.ToTable("cost_center_responsibles", (string)null);
                 });
 
             modelBuilder.Entity("GestaoFaturas.Api.Models.Invoice", b =>
@@ -464,9 +500,9 @@ namespace GestaoFaturas.Api.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
-                    b.Property<int>("CostCenterId")
+                    b.Property<int>("ClientId")
                         .HasColumnType("integer")
-                        .HasColumnName("cost_center_id");
+                        .HasColumnName("client_id");
 
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
@@ -485,33 +521,33 @@ namespace GestaoFaturas.Api.Migrations
                         .HasColumnType("character varying(100)")
                         .HasColumnName("email");
 
-                    b.Property<string>("FullName")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("character varying(100)")
-                        .HasColumnName("full_name");
-
                     b.Property<bool>("IsActive")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("boolean")
                         .HasDefaultValue(true)
                         .HasColumnName("is_active");
 
-                    b.Property<bool>("IsPrimary")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("boolean")
-                        .HasDefaultValue(false)
-                        .HasColumnName("is_primary");
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("character varying(100)")
+                        .HasColumnName("name");
 
                     b.Property<string>("Phone")
                         .HasMaxLength(20)
                         .HasColumnType("character varying(20)")
                         .HasColumnName("phone");
 
-                    b.Property<string>("Position")
+                    b.Property<bool>("ReceivesNotifications")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(true)
+                        .HasColumnName("receives_notifications");
+
+                    b.Property<string>("Role")
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)")
-                        .HasColumnName("position");
+                        .HasColumnName("role");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()
@@ -522,14 +558,15 @@ namespace GestaoFaturas.Api.Migrations
                     b.HasKey("Id")
                         .HasName("pk_responsible_persons");
 
+                    b.HasIndex("ClientId")
+                        .HasDatabaseName("ix_responsible_persons_client_id");
+
                     b.HasIndex("Email")
+                        .IsUnique()
                         .HasDatabaseName("ix_responsible_persons_email");
 
                     b.HasIndex("IsActive")
                         .HasDatabaseName("ix_responsible_persons_is_active");
-
-                    b.HasIndex("CostCenterId", "IsPrimary")
-                        .HasDatabaseName("ix_responsible_persons_cost_center_primary");
 
                     b.ToTable("responsible_persons", (string)null);
                 });
@@ -798,6 +835,27 @@ namespace GestaoFaturas.Api.Migrations
                     b.Navigation("ParentCostCenter");
                 });
 
+            modelBuilder.Entity("GestaoFaturas.Api.Models.CostCenterResponsible", b =>
+                {
+                    b.HasOne("GestaoFaturas.Api.Models.CostCenter", "CostCenter")
+                        .WithMany("CostCenterResponsibles")
+                        .HasForeignKey("CostCenterId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_cost_center_responsibles_cost_centers_cost_center_id");
+
+                    b.HasOne("GestaoFaturas.Api.Models.ResponsiblePerson", "ResponsiblePerson")
+                        .WithMany("CostCenterResponsibles")
+                        .HasForeignKey("ResponsiblePersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired()
+                        .HasConstraintName("fk_cost_center_responsibles_responsible_persons_responsible_pe");
+
+                    b.Navigation("CostCenter");
+
+                    b.Navigation("ResponsiblePerson");
+                });
+
             modelBuilder.Entity("GestaoFaturas.Api.Models.Invoice", b =>
                 {
                     b.HasOne("GestaoFaturas.Api.Models.Client", "Client")
@@ -860,14 +918,14 @@ namespace GestaoFaturas.Api.Migrations
 
             modelBuilder.Entity("GestaoFaturas.Api.Models.ResponsiblePerson", b =>
                 {
-                    b.HasOne("GestaoFaturas.Api.Models.CostCenter", "CostCenter")
+                    b.HasOne("GestaoFaturas.Api.Models.Client", "Client")
                         .WithMany("ResponsiblePersons")
-                        .HasForeignKey("CostCenterId")
+                        .HasForeignKey("ClientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired()
-                        .HasConstraintName("fk_responsible_persons_cost_centers_cost_center_id");
+                        .HasConstraintName("fk_responsible_persons_clients_client_id");
 
-                    b.Navigation("CostCenter");
+                    b.Navigation("Client");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -932,15 +990,17 @@ namespace GestaoFaturas.Api.Migrations
                     b.Navigation("CostCenters");
 
                     b.Navigation("Invoices");
+
+                    b.Navigation("ResponsiblePersons");
                 });
 
             modelBuilder.Entity("GestaoFaturas.Api.Models.CostCenter", b =>
                 {
                     b.Navigation("ChildCostCenters");
 
-                    b.Navigation("Invoices");
+                    b.Navigation("CostCenterResponsibles");
 
-                    b.Navigation("ResponsiblePersons");
+                    b.Navigation("Invoices");
                 });
 
             modelBuilder.Entity("GestaoFaturas.Api.Models.Invoice", b =>
@@ -951,6 +1011,11 @@ namespace GestaoFaturas.Api.Migrations
             modelBuilder.Entity("GestaoFaturas.Api.Models.InvoiceStatus", b =>
                 {
                     b.Navigation("Invoices");
+                });
+
+            modelBuilder.Entity("GestaoFaturas.Api.Models.ResponsiblePerson", b =>
+                {
+                    b.Navigation("CostCenterResponsibles");
                 });
 #pragma warning restore 612, 618
         }

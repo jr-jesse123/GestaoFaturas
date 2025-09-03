@@ -60,10 +60,7 @@ public class CostCenterConfiguration : IEntityTypeConfiguration<CostCenter>
             .HasForeignKey(cc => cc.ParentCostCenterId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasMany(cc => cc.ResponsiblePersons)
-            .WithOne(rp => rp.CostCenter)
-            .HasForeignKey(rp => rp.CostCenterId)
-            .OnDelete(DeleteBehavior.Cascade);
+        // ResponsiblePersons relationship is now handled via junction table CostCenterResponsibles
 
         builder.HasMany(cc => cc.Invoices)
             .WithOne(i => i.CostCenter)

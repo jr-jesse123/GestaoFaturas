@@ -32,6 +32,6 @@ public class CostCenter
     public virtual Client Client { get; set; } = null!;
     public virtual CostCenter? ParentCostCenter { get; set; }
     public virtual ICollection<CostCenter> ChildCostCenters { get; set; } = new List<CostCenter>();
-    public virtual ICollection<ResponsiblePerson> ResponsiblePersons { get; set; } = new List<ResponsiblePerson>();
+    public virtual ICollection<CostCenterResponsible> CostCenterResponsibles { get; set; } = new List<CostCenterResponsible>();
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
 }

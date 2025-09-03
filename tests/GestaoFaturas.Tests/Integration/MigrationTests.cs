@@ -263,15 +263,17 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
             Name = "Test Cost Center"
         };
 
+        context.Clients.Add(client);
+        context.CostCenters.Add(costCenter);
+        await context.SaveChangesAsync();
+
         var responsiblePerson = new Api.Models.ResponsiblePerson
         {
-            CostCenter = costCenter,
-            FullName = "John Doe",
+            ClientId = client.Id,
+            Name = "John Doe",
             Email = "john.doe@test.com"
         };
 
-        context.Clients.Add(client);
-        context.CostCenters.Add(costCenter);
         context.ResponsiblePersons.Add(responsiblePerson);
         await context.SaveChangesAsync();
 
@@ -286,11 +288,19 @@ public class MigrationTests : IClassFixture<PostgreSqlFixture>
         // Reset context
         context.Entry(client).State = EntityState.Unchanged;
 
-        // Act & Assert - Delete cost center should cascade to responsible person
+        // Act & Assert - Delete cost center should NOT cascade to responsible person (new behavior)
+        // ResponsiblePerson is now linked to Client, not CostCenter directly
         context.CostCenters.Remove(costCenter);
         await context.SaveChangesAsync();
 
         var remainingPersons = await context.ResponsiblePersons.CountAsync();
-        Assert.Equal(0, remainingPersons); // Should be cascaded
+        Assert.Equal(1, remainingPersons); // ResponsiblePerson should remain (linked to Client)
+        
+        // Delete Client should cascade to responsible person
+        context.Clients.Remove(client);
+        await context.SaveChangesAsync();
+        
+        var finalPersons = await context.ResponsiblePersons.CountAsync();
+        Assert.Equal(0, finalPersons); // Should be cascaded when Client is deleted
     }
 }

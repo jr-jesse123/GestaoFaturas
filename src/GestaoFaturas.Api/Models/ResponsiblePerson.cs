@@ -7,11 +7,11 @@ public class ResponsiblePerson
     public int Id { get; set; }
 
     [Required]
-    public int CostCenterId { get; set; }
+    public int ClientId { get; set; }
 
     [Required]
     [StringLength(100)]
-    public string FullName { get; set; } = string.Empty;
+    public string Name { get; set; } = string.Empty;
 
     [Required]
     [StringLength(100)]
@@ -23,17 +23,18 @@ public class ResponsiblePerson
     public string? Phone { get; set; }
 
     [StringLength(100)]
-    public string? Position { get; set; }
+    public string? Role { get; set; }
 
     [StringLength(50)]
     public string? Department { get; set; }
 
     public bool IsActive { get; set; } = true;
-    public bool IsPrimary { get; set; } = false;
+    public bool ReceivesNotifications { get; set; } = true;
 
     public DateTime CreatedAt { get; set; }
     public DateTime UpdatedAt { get; set; }
 
     // Navigation properties
-    public virtual CostCenter CostCenter { get; set; } = null!;
+    public virtual Client Client { get; set; } = null!;
+    public virtual ICollection<CostCenterResponsible> CostCenterResponsibles { get; set; } = new List<CostCenterResponsible>();
 }

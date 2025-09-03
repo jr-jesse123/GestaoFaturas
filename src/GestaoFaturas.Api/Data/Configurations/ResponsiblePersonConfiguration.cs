@@ -15,7 +15,7 @@ public class ResponsiblePersonConfiguration : IEntityTypeConfiguration<Responsib
         builder.HasKey(rp => rp.Id);
 
         // Properties configuration
-        builder.Property(rp => rp.FullName)
+        builder.Property(rp => rp.Name)
             .IsRequired()
             .HasMaxLength(100);
 
@@ -26,7 +26,7 @@ public class ResponsiblePersonConfiguration : IEntityTypeConfiguration<Responsib
         builder.Property(rp => rp.Phone)
             .HasMaxLength(20);
 
-        builder.Property(rp => rp.Position)
+        builder.Property(rp => rp.Role)
             .HasMaxLength(100);
 
         builder.Property(rp => rp.Department)
@@ -35,8 +35,8 @@ public class ResponsiblePersonConfiguration : IEntityTypeConfiguration<Responsib
         builder.Property(rp => rp.IsActive)
             .HasDefaultValue(true);
 
-        builder.Property(rp => rp.IsPrimary)
-            .HasDefaultValue(false);
+        builder.Property(rp => rp.ReceivesNotifications)
+            .HasDefaultValue(true);
 
         builder.Property(rp => rp.CreatedAt)
             .IsRequired()
@@ -48,18 +48,19 @@ public class ResponsiblePersonConfiguration : IEntityTypeConfiguration<Responsib
 
         // Indexes
         builder.HasIndex(rp => rp.Email)
-            .HasDatabaseName("ix_responsible_persons_email");
+            .HasDatabaseName("ix_responsible_persons_email")
+            .IsUnique();
 
-        builder.HasIndex(rp => new { rp.CostCenterId, rp.IsPrimary })
-            .HasDatabaseName("ix_responsible_persons_cost_center_primary");
+        builder.HasIndex(rp => rp.ClientId)
+            .HasDatabaseName("ix_responsible_persons_client_id");
 
         builder.HasIndex(rp => rp.IsActive)
             .HasDatabaseName("ix_responsible_persons_is_active");
 
         // Relationships
-        builder.HasOne(rp => rp.CostCenter)
-            .WithMany(cc => cc.ResponsiblePersons)
-            .HasForeignKey(rp => rp.CostCenterId)
+        builder.HasOne(rp => rp.Client)
+            .WithMany(c => c.ResponsiblePersons)
+            .HasForeignKey(rp => rp.ClientId)
             .OnDelete(DeleteBehavior.Cascade);
     }
 }

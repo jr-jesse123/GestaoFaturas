@@ -693,25 +693,34 @@ public class DatabaseConstraintsTests : IClassFixture<PostgreSqlFixture>
             Name = "Test Cost Center"
         };
 
+        context.Clients.Add(client);
+        context.CostCenters.Add(costCenter);
+        await context.SaveChangesAsync();
+
         var responsiblePerson = new ResponsiblePerson
         {
-            CostCenter = costCenter,
-            FullName = "John Doe",
+            ClientId = client.Id,
+            Name = "John Doe",
             Email = GetUniqueEmail()
         };
 
-        context.Clients.Add(client);
-        context.CostCenters.Add(costCenter);
         context.ResponsiblePersons.Add(responsiblePerson);
         await context.SaveChangesAsync();
 
-        // Act
+        // Act - Delete cost center should NOT cascade to responsible person (new behavior)
+        // ResponsiblePerson is now linked to Client, not CostCenter directly
         context.CostCenters.Remove(costCenter);
         await context.SaveChangesAsync();
 
-        // Assert
-        Assert.Equal(0, await context.ResponsiblePersons.CountAsync()); // Should be cascaded
+        // Assert - ResponsiblePerson should remain (linked to Client)
+        Assert.Equal(1, await context.ResponsiblePersons.CountAsync());
         Assert.Equal(0, await context.CostCenters.CountAsync());
+        
+        // Delete Client should cascade to responsible person
+        context.Clients.Remove(client);
+        await context.SaveChangesAsync();
+        
+        Assert.Equal(0, await context.ResponsiblePersons.CountAsync()); // Should be cascaded when Client is deleted
     }
 
     [Fact]

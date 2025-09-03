@@ -27,7 +27,8 @@ public class ClientRepository : Repository<Client>, IClientRepository
     {
         return await _dbSet
             .Include(c => c.CostCenters)
-                .ThenInclude(cc => cc.ResponsiblePersons)
+                .ThenInclude(cc => cc.CostCenterResponsibles)
+                    .ThenInclude(ccr => ccr.ResponsiblePerson)
             .FirstOrDefaultAsync(c => c.Id == clientId, cancellationToken);
     }
 

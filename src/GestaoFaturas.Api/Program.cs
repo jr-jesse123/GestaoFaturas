@@ -17,12 +17,12 @@ public class Program
         try
         {
             Log.Information("Starting GestaoFaturas API");
-            
+
             var builder = WebApplication.CreateBuilder(args);
-            
+
             // Add service defaults & Aspire components
             builder.AddServiceDefaults();
-            
+
             // Configure Serilog
             builder.Host.UseSerilog((context, services, configuration) => configuration
                 .ReadFrom.Configuration(context.Configuration)
@@ -48,7 +48,7 @@ public class Program
             // Register Repositories and Services
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
-            
+
             // Register Business Services
             builder.Services.AddScoped<IClientService, ClientService>();
 
@@ -64,14 +64,14 @@ public class Program
             });
 
             var app = builder.Build();
-            
+
             // Run database migrations
             using (var scope = app.Services.CreateScope())
             {
                 var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
                 dbContext.Database.Migrate();
             }
-            
+
             // Map default endpoints
             app.MapDefaultEndpoints();
 
@@ -91,7 +91,7 @@ public class Program
 
             Log.Information("GestaoFaturas API started successfully");
             app.Run();
-            
+
             return 0;
         }
         catch (Exception ex)

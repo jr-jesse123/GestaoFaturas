@@ -39,4 +39,5 @@ public class Client
     // Navigation properties
     public virtual ICollection<CostCenter> CostCenters { get; set; } = new List<CostCenter>();
     public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual ICollection<ResponsiblePerson> ResponsiblePersons { get; set; } = new List<ResponsiblePerson>();
 }

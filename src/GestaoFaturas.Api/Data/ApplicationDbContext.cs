@@ -19,6 +19,7 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<Client> Clients { get; set; }
     public DbSet<CostCenter> CostCenters { get; set; }
     public DbSet<ResponsiblePerson> ResponsiblePersons { get; set; }
+    public DbSet<CostCenterResponsible> CostCenterResponsibles { get; set; }
     public DbSet<Invoice> Invoices { get; set; }
     public DbSet<InvoiceStatus> InvoiceStatuses { get; set; }
     public DbSet<InvoiceHistory> InvoiceHistories { get; set; }
