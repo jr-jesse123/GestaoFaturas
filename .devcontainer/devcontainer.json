@@ -106,7 +106,7 @@
     }
   },
   // Run commands after container is created
-  "postCreateCommand": "/bin/bash .devcontainer/post-create.sh",
+  "postCreateCommand": "dotnet tool restore && /bin/bash .devcontainer/post-create.sh",
   // Run as non-root user
   "remoteUser": "vscode",
   // Environment variables
