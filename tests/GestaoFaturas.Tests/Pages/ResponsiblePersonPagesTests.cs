@@ -11,11 +11,11 @@ using Xunit;
 
 namespace GestaoFaturas.Tests.Pages;
 
-public class ResponsiblePersonPagesTests : IClassFixture<WebApplicationFactory<Program>>
+public class ResponsiblePersonPagesTests : IClassFixture<WebApplicationFactory<GestaoFaturas.Api.Program>>
 {
-    private readonly WebApplicationFactory<Program> _factory;
+    private readonly WebApplicationFactory<GestaoFaturas.Api.Program> _factory;
 
-    public ResponsiblePersonPagesTests(WebApplicationFactory<Program> factory)
+    public ResponsiblePersonPagesTests(WebApplicationFactory<GestaoFaturas.Api.Program> factory)
     {
         _factory = factory.WithWebHostBuilder(builder =>
         {

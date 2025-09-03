@@ -1,0 +1,83 @@
+@model GestaoFaturas.Api.Models.ResponsiblePerson
+
+<div class="mb-3">
+    <label asp-for="Name" class="form-label required">Name</label>
+    <input asp-for="Name" class="form-control" required />
+    <span asp-validation-for="Name" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Email" class="form-label required">Email</label>
+    <input asp-for="Email" class="form-control" type="email" required />
+    <span asp-validation-for="Email" class="text-danger"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Phone" class="form-label">Phone</label>
+    <input asp-for="Phone" class="form-control" type="tel" placeholder="+55 11 98765-4321" />
+    <span asp-validation-for="Phone" class="text-danger"></span>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <label asp-for="Role" class="form-label">Role</label>
+        <input asp-for="Role" class="form-control" placeholder="e.g., Finance Manager" />
+        <span asp-validation-for="Role" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-6 mb-3">
+        <label asp-for="Department" class="form-label">Department</label>
+        <input asp-for="Department" class="form-control" placeholder="e.g., Finance" />
+        <span asp-validation-for="Department" class="text-danger"></span>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-4 mb-3">
+        <div class="form-check form-switch">
+            <input asp-for="IsPrimaryContact" class="form-check-input" type="checkbox" id="isPrimaryContact" />
+            <label asp-for="IsPrimaryContact" class="form-check-label" for="isPrimaryContact">
+                Primary Contact
+            </label>
+        </div>
+        <small class="text-muted d-block mt-1">
+            <i class="bi bi-info-circle"></i> Only one primary contact allowed per client
+        </small>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-check form-switch">
+            <input asp-for="IsActive" class="form-check-input" type="checkbox" id="isActive" checked />
+            <label asp-for="IsActive" class="form-check-label" for="isActive">
+                Active
+            </label>
+        </div>
+        <small class="text-muted d-block mt-1">
+            <i class="bi bi-info-circle"></i> Inactive contacts won't receive notifications
+        </small>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <div class="form-check form-switch">
+            <input asp-for="ReceivesNotifications" class="form-check-input" type="checkbox" id="receivesNotifications" checked />
+            <label asp-for="ReceivesNotifications" class="form-check-label" for="receivesNotifications">
+                Receives Notifications
+            </label>
+        </div>
+        <small class="text-muted d-block mt-1">
+            <i class="bi bi-info-circle"></i> Email notifications for invoices
+        </small>
+    </div>
+</div>
+
+<style>
+    .required::after {
+        content: " *";
+        color: var(--bs-danger);
+    }
+    
+    .form-check-input:checked {
+        background-color: var(--bs-primary);
+        border-color: var(--bs-primary);
+    }
+</style>
